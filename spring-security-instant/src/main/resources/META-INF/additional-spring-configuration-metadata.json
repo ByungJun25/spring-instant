@@ -1,0 +1,46 @@
+{
+    "hints": [
+        {
+            "name": "instant.security.session-management.creation-policy",
+            "values": [
+                {
+                    "value": "ALWAYS",
+                    "description": "Always create an HttpSession"
+                },
+                {
+                    "value": "IF_REQUIRED",
+                    "description": "Spring Security will only create an HttpSession if required"
+                },
+                {
+                    "value": "NEVER",
+                    "description": "Spring Security will never create an HttpSession, but will use the HttpSession if it already exists"
+                },
+                {
+                    "value": "STATELESS",
+                    "description": "Spring Security will never create an HttpSession and it will never use it to obtain the SecurityContext"
+                }
+            ]
+        },
+        {
+            "name": "instant.security.session-management.fixation-properties.type",
+            "values": [
+                {
+                    "value": "CHANGE_SESSION_ID",
+                    "description": "Specifies that the Servlet container-provided session fixation protection should be used."
+                },
+                {
+                    "value": "MIGRATE_SESSION",
+                    "description": "Specifies that a new session should be created and the session attributes from the original HttpSession should be retained."
+                },
+                {
+                    "value": "NEW_SESSION",
+                    "description": "Specifies that a new session should be created, but the session attributes from the original HttpSession should not be retained."
+                },
+                {
+                    "value": "NONE",
+                    "description": "Specifies that no session fixation protection should be enabled."
+                }
+            ]
+        }
+    ]
+}

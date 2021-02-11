@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.bj25.spring.security.instant.enums.SessionFixationType;
 import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
 import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties.FixationProperties.FixationType;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -165,9 +165,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final String loginSuccessUrl = this.instantSecurityProperties.getLogin().getSuccessUrl();
         final String usernameParameter = this.instantSecurityProperties.getLogin().getUsernameParameter();
         final String failureUrl = this.instantSecurityProperties.getLogin().getAuthenticationFailureUrl();
+        final String passwordParameter = this.instantSecurityProperties.getLogin().getPasswordParameter();
 
         http.formLogin().loginPage(loginPage).loginProcessingUrl(loginPage).defaultSuccessUrl(loginSuccessUrl)
-                .usernameParameter(usernameParameter).failureUrl(failureUrl).permitAll();
+                .usernameParameter(usernameParameter).passwordParameter(passwordParameter).failureUrl(failureUrl).permitAll();
     }
 
     /**
@@ -251,7 +252,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         if (sessionManagementProperties.getFixationProperties().isEnabled()) {
-            final SessionFixationType type = SessionFixationType.valueOf(SessionFixationType.class,
+            final FixationType type = FixationType.valueOf(FixationType.class,
                     sessionManagementProperties.getFixationProperties().getType());
 
             switch (type) {

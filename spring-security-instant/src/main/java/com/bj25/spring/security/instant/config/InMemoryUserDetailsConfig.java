@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
-import com.bj25.spring.security.instant.utils.InstantSecurityProperties.DatabaseProperties.Client;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.InMemoryUserDetailsServiceProperties.Client;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

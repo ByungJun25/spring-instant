@@ -38,11 +38,11 @@ instant:
       permission-urls:
         ## paths per each roles for security configuration
         ## ROLE_ADMIN
-        ROLE_ADMIN:
+        '[ROLE_ADMIN]':
           - /admin
           - /admin/**
         ##ROLE_USER
-        ROLE_USER:
+        '[ROLE_USER]':
           - /user
           - /user/**
       all:
@@ -71,7 +71,7 @@ instant:
       disabled: false
       cookieCsrfToken: false
     cors:
-      '[/api/**]':
+      '[/api/*]':
         allowedOrigins:
           - http://localhost:8080
         allowedHeaders:
