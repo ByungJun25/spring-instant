@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>index</title>
+</head>
+
+<body>
+    <h2>index</h2>
+    <ul>
+        <li><a href="/">index page</a></li>
+        <li><a href="/login">login page</a></li>
+        <li><a href="/user">user page</a></li>
+        <li><a href="/admin">admin page</a></li>
+        <li><a href="/mypage">my page</a></li>
+        <li><a href="/anonymous">anonymous page</a></li>
+    </ul>
+
+    <div>
+        <button id="me">me</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:src="@{/js/me.js}" async></script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: spring-security-user-instant-demo
+  config:
+    activate:
+      on-profile:
+      - default
+  ## THYMELEAF DEFAULT SETTING
+  thymeleaf:
+    prefix: classpath:/templates
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    check-template-location: true
+    cache: false
+
+instant:
+  security:
+    inMemory:
+      enabled: true
+      users:
+        - username: user@user.com
+          password: user123
+          roles: USER
+        - username: admin@admin.com
+          password: admin123
+          roles: ADMIN
+        - username: superAdmin@admin.com
+          password: super123
+          roles: USER, ADMIN
+    permission:
+      ignore-paths:
+        ## ignore paths per HttpMethods
+        GET:
+          - /css/**
+          - /js/**
+          - /img/**
+      permission-urls:
+        ## paths per each roles for security configuration
+        ## ROLE_ADMIN
+        ROLE_ADMIN:
+          - /admin
+          - /admin/**
+        ##ROLE_USER
+        ROLE_USER:
+          - /user
+          - /user/**
+      all:
+        - /
+      anonymous:
+        - /anonymous
+    login:
+      page: /login
+      successUrl: /mypage # default - '/'
+      authenticationFailureUrl: /login?error
+      usernameParameter: email # default - 'username'
+    logout:
+      invalidateHttpSession: true
+      clearAuthentication: true
+      url: /logout
+      successUrl: /login?logout
+      deleteCookies:
+        - JSESSIONID
+    sessionManagement:
+      creationPolicy: IF_REQUIRED
+    authenticationEntryPoint:
+      redirectUrl: /login?error
+    accessDeniedHandler:
+      redirectUrl: /error/accessDenied
+    csrf:
+      disabled: false
+      cookieCsrfToken: false
+    cors:
+      '[/api/**]':
+        allowedOrigins:
+          - http://localhost:8080
+        allowedHeaders:
+          - x-requested-with
+          - content-type
+        allowedMethods:
+          - HEAD
+          - OPTIONS
+          - GET
+          - POST
+          - PUT
+        allowCredentials: true
+
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60s ## for testing
+
+
