@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Spring-security-instant Document
+    url: https://github.com/ByungJun25/spring-instant/tree/main/spring-security-instant
+    about: If you need informations of spring-security-instant, please see the document first.

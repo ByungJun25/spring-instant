@@ -1,7 +1,7 @@
 package com.bj25.spring.security.user.instant.service;
 
 import com.bj25.spring.security.user.instant.model.BaseUser;
-import com.bj25.spring.security.user.instant.model.UserPricipal;
+import com.bj25.spring.security.user.instant.model.UserPrincipal;
 import com.bj25.spring.security.user.instant.repository.DefaultUserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +24,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
         BaseUser user = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Cannot find a user - username: " + username));
 
-        return UserPricipal.builder().authorities(user.getPriviliges()).isCredentialExpired(user.isCredentialExpired())
+        return UserPrincipal.builder().authorities(user.getPriviliges()).isCredentialExpired(user.isCredentialExpired())
                 .isEnabled(user.isEnabled()).isExpired(user.isExpired()).isLock(user.isLock())
                 .password(user.getPassword()).username(user.getUsername()).build();
     }

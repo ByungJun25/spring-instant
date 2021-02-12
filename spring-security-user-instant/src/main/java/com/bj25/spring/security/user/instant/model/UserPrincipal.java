@@ -18,7 +18,7 @@ import lombok.Getter;
  * @author bj25
  */
 @Getter
-public class UserPricipal implements BaseUser, UserDetails {
+public class UserPrincipal implements BaseUser, UserDetails {
 
     private static final long serialVersionUID = 7823815002182193972L;
 
@@ -31,7 +31,7 @@ public class UserPricipal implements BaseUser, UserDetails {
     private Collection<BasePrivilige> authorities;
 
     @Builder
-    public UserPricipal(String username, String password, boolean isLock, boolean isExpired, boolean isEnabled,
+    public UserPrincipal(String username, String password, boolean isLock, boolean isExpired, boolean isEnabled,
             boolean isCredentialExpired, Collection<BasePrivilige> authorities) {
         this.username = username;
         this.password = password;
