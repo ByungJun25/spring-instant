@@ -65,6 +65,7 @@ instant:
       remember-me:
         enabled: true
         type: PERSISTENT
+        token-validity-seconds: 86400
     logout:
       invalidateHttpSession: true
       clearAuthentication: true

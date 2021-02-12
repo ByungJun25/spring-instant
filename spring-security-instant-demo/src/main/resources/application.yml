@@ -57,6 +57,7 @@ instant:
       remember-me:
         enabled: true
         type: COOKIE_ONLY
+        token-validity-seconds: 86400
     logout:
       invalidateHttpSession: true
       clearAuthentication: true

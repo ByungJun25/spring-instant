@@ -8,14 +8,13 @@ This is works as like simple tutorial code of spring-security project that sever
 * Who doesn't want to spend much time to apply spring security for prototype application or toy project.
 * Who doesn't know about spring security but need a spring security for toy project.
 
-## Support
-* Support `yaml` based configuration.
-* form based login and logout.
-* validate authentication of ajax communication.
-* configure CORS.
-* configure CSRF(default, disable and cookieRepository).
-* configure session management's creation policy.
-* default passwordEncoder.
+## What can you configure via `yaml`
+* support a form based login and logout.
+* support to validate authentication of ajax communication.
+* support to configure basic CORS.
+* support to configure basic CSRF.
+* support to configure rememberMe.
+* support to configure basic session management.
 
 ## Requirement
 * Spring boot 2.4.2+
@@ -37,7 +36,7 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
     </dependency>
     ```
 
-2. Setup database policy
+2. Set up database policy
     1. InMemory Security  
         1. Enable `inMemory` and add clients
 
@@ -66,6 +65,106 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
         
         - UserDetails: [spring security user instant - UserPrincipal](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/model/UserPrincipal.java)
         - UserDetailsService: [spring security user instant - DefaultUserDetailsService](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/service/DefaultUserDetailsService.java)
+
+3. Set up permission per URLs.  
+    1. ignore-paths - you can set the URLs per HttpMethod to ignore security.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              ignore-paths:
+                GET:
+                  - /css/**
+                  - /js/**
+                  - /img/**
+        ```
+
+        </details>
+
+    2. permission-urls - you can set the URLs per Authority.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              permission-urls:
+                '[ROLE_ADMIN]':
+                  - /admin
+                '[ROLE_USER]':
+                  - /user
+        ```
+
+        </details>
+
+    3. all - you can set the URLs for permittAll.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              all:
+                - /
+        ```
+
+        </details>
+
+    4. anonymous - you can set the URLs for anonymous.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              anonymous:
+                - /anonymous
+        ```
+
+        </details>
+
+4. (Optional) Set up rememberMe.  
+    You can turn on rememberMe option.
+
+    1. COOKIE_ONLY - This uses rememberMe option with cookie.  
+
+        ```yaml
+        instant:
+          security:
+            login:
+              remember-me:
+                enabled: true
+                type: COOKIE_ONLY
+                token-validity-seconds: 86400
+        ```
+
+    2. PERSISTENT - This uses rememberMe option with database.  
+        **For this option, you should implement `PersistentTokenRepository` interface and register it as Bean.**
+
+        For Example. 
+
+        - PersistentTokenRepository: [spring security user instant - RememberMeTokenRepository](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/repository/RememberMeTokenRepository.java)
+
+        ```yaml
+        instant:
+          security:
+            login:
+              remember-me:
+                enabled: true
+                type: PERSISTENT
+                token-validity-seconds: 86400
+        ```
+
 
 5. Declare `@EnableInstantSecurity` on your main class.  
 
@@ -118,7 +217,15 @@ Here you can see all properties that you can set up for your own security policy
 |`instant.security.login.authentication-failure-url`|String|`/login?error`|The URL to be redirected when the user fails to login.|
 |`instant.security.login.username-parameter`|String|`username`|The HTTP parameter to look for the username when performing authentication.|
 |`instant.security.login.password-parameter`|String|`password`|The HTTP parameter to look for the password when performing authentication.|
-
+|`instant.security.login.remember-me.enabled`|boolean|`false`|Enable the remeber-me.|
+|`instant.security.login.remember-me.always-remember`|Boolean|`null`|Whether the cookie should always be created even if the remember-me parameter is not set.|
+|`instant.security.login.remember-me.type`|`COOKIE_ONLY`, `PERSISTENT`|`COOKIE_ONLY`|Type of the remember-me option.|
+|`instant.security.login.remember-me.key`|String|`rememberMeSecret`|Sets the key to identify tokens created for remember me authentication.|
+|`instant.security.login.remember-me.cookie-domain`|String|`null`|The domain name within which the remember me cookie is visible.|
+|`instant.security.login.remember-me.secure-cookie`|Boolean|`null`|Whether the cookie should be flagged as secure or not. Secure cookies can only be sent over an HTTPS connection and thus cannot be accidentally submitted over HTTP where they could be intercepted.|
+|`instant.security.login.remember-me.cookie-name`|String|`remember-me`|The name of cookie which store the token for remember me authentication.|
+|`instant.security.login.remember-me.remember-me-parameter`|String|`remember-me`|The HTTP parameter used to indicate to remember the user at time of login.|
+|`instant.security.login.remember-me.token-validity-seconds`|Integer|`null`|Allows specifying how long (in seconds) a token is valid for.|
 </details>
 
 #### 3. Logout
@@ -143,8 +250,8 @@ Here you can see all properties that you can set up for your own security policy
 
 |Name|type|Default value|Description|
 |---|---|---|---|
-|`instant.security.permission.ignore-paths.[httpMethod]`|String[]|`Empty HashMap`|Allows adding RequestMatcher instances that should that Spring Security should ignore.|
-|`instant.security.permission.permission-urls.[authorityName]`|String[]|`Empty HashMap`|The URLs per roles|
+|`instant.security.permission.ignore-paths.[httpMethod]`|String[]|`{}`|Allows adding RequestMatcher instances that should that Spring Security should ignore.|
+|`instant.security.permission.permission-urls.[authorityName]`|String[]|`{}`|The URLs per roles|
 |`instant.security.permission.anonymous`|String[]|`{}`|The URLs for anonymous.|
 |`instant.security.permission.all`|String[]|`{}`|The URLs for permitAll.|
 

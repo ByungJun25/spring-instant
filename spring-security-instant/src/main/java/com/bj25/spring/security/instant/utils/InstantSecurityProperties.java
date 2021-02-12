@@ -146,20 +146,61 @@ public class InstantSecurityProperties {
          */
         private String passwordParameter = "password";
 
+        /**
+         * Allows configuring of Remember Me authentication.
+         */
         private RememberMe rememberMe = new RememberMe();
 
         @Setter
         @Getter
         public static class RememberMe {
+            /**
+             * Enable the remeber-me.
+             */
             private boolean enabled = false;
+
+            /**
+             * Whether the cookie should always be created even if the remember-me parameter
+             * is not set.
+             */
             private Boolean alwaysRemember;
+
+            /**
+             * Type of the remember-me option.
+             */
             private String type = "COOKIE_ONLY";
+
+            /**
+             * Sets the key to identify tokens created for remember me authentication.
+             */
             private String key = "rememberMeSecret";
+
+            /**
+             * The domain name within which the remember me cookie is visible.
+             */
             private String cookieDomain;
+
+            /**
+             * Whether the cookie should be flagged as secure or not. Secure cookies can
+             * only be sent over an HTTPS connection and thus cannot be accidentally
+             * submitted over HTTP where they could be intercepted.
+             */
             private Boolean secureCookie;
+
+            /**
+             * The name of cookie which store the token for remember me authentication.
+             */
             private String cookieName = "remember-me";
+
+            /**
+             * The HTTP parameter used to indicate to remember the user at time of login.
+             */
             private String rememberMeParameter = "remember-me";
-            private Integer tokenValiditySeconds = (1 * 24 * 60 * 60);
+
+            /**
+             * Allows specifying how long (in seconds) a token is valid for.
+             */
+            private Integer tokenValiditySeconds;
 
             public static enum Type {
                 COOKIE_ONLY, PERSISTENT;
@@ -439,7 +480,7 @@ public class InstantSecurityProperties {
             /**
              * roles - Don't write {@code ROLE_}
              */
-            private String[] roles = new String[]{};
+            private String[] roles = new String[] {};
 
             /**
              * isAccountExpired
