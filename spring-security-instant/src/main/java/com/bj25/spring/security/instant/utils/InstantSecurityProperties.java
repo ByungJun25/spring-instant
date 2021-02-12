@@ -396,7 +396,7 @@ public class InstantSecurityProperties {
         /**
          * Enable the InMemoryUserDetailsService.
          */
-        private boolean enabled = true;
+        private boolean enabled = false;
 
         /**
          * Create a new user with the supplied details.
@@ -419,7 +419,7 @@ public class InstantSecurityProperties {
             /**
              * roles - Don't write {@code ROLE_}
              */
-            private String[] roles;
+            private String[] roles = new String[]{};
 
             /**
              * isAccountExpired
