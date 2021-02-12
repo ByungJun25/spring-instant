@@ -145,6 +145,26 @@ public class InstantSecurityProperties {
          * The HTTP parameter to look for the password when performing authentication.
          */
         private String passwordParameter = "password";
+
+        private RememberMe rememberMe = new RememberMe();
+
+        @Setter
+        @Getter
+        public static class RememberMe {
+            private boolean enabled = false;
+            private Boolean alwaysRemember;
+            private String type = "COOKIE_ONLY";
+            private String key = "rememberMeSecret";
+            private String cookieDomain;
+            private Boolean secureCookie;
+            private String cookieName = "remember-me";
+            private String rememberMeParameter = "remember-me";
+            private Integer tokenValiditySeconds = (1 * 24 * 60 * 60);
+
+            public static enum Type {
+                COOKIE_ONLY, PERSISTENT;
+            }
+        }
     }
 
     @Setter

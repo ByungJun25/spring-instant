@@ -41,6 +41,19 @@
                     "description": "Specifies that no session fixation protection should be enabled."
                 }
             ]
+        },
+        {
+            "name": "instant.security.login.remember-me.type",
+            "values": [
+                {
+                    "value": "COOKIE_ONLY",
+                    "description": ""
+                },
+                {
+                    "value": "PERSISTENT",
+                    "description": ""
+                }
+            ]
         }
     ]
 }

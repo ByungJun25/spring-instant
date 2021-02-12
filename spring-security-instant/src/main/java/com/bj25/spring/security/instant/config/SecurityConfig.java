@@ -10,6 +10,7 @@ import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
 import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties.FixationProperties.FixationType;
 
@@ -20,9 +21,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.util.StringUtils;
@@ -47,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final InstantSecurityProperties instantSecurityProperties;
 
     private final Optional<UserDetailsService> userDetailsService;
+    private final Optional<PersistentTokenRepository> persistentTokenRepository;
 
     private final InstantAccessDeniedHandler instantAccessDeniedHandler;
     private final InstantAuthenticationEntryPoint instantAuthenticationEntryPoint;
@@ -166,9 +170,80 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final String usernameParameter = this.instantSecurityProperties.getLogin().getUsernameParameter();
         final String failureUrl = this.instantSecurityProperties.getLogin().getAuthenticationFailureUrl();
         final String passwordParameter = this.instantSecurityProperties.getLogin().getPasswordParameter();
+        final boolean isEnableRememberMe = this.instantSecurityProperties.getLogin().getRememberMe().isEnabled();
 
         http.formLogin().loginPage(loginPage).loginProcessingUrl(loginPage).defaultSuccessUrl(loginSuccessUrl)
-                .usernameParameter(usernameParameter).passwordParameter(passwordParameter).failureUrl(failureUrl).permitAll();
+                .usernameParameter(usernameParameter).passwordParameter(passwordParameter).failureUrl(failureUrl)
+                .permitAll();
+
+        if (isEnableRememberMe) {
+            this.rememberMe(http);
+        }
+    }
+
+    private void rememberMe(HttpSecurity http) throws Exception {
+        final RememberMe.Type type = RememberMe.Type.valueOf(RememberMe.Type.class,
+                this.instantSecurityProperties.getLogin().getRememberMe().getType());
+
+        switch (type) {
+            case COOKIE_ONLY:
+                this.rememberMeCookieOnly(http);
+                break;
+            case PERSISTENT:
+                this.rememberMePersistent(http);
+                break;
+            default:
+                log.warn("No type for rememberMe configuration, it will be ignored");
+                break;
+        }
+    }
+
+    private void rememberMeCookieOnly(HttpSecurity http) throws Exception {
+        final String key = this.instantSecurityProperties.getLogin().getRememberMe().getKey();
+
+        RememberMeConfigurer<HttpSecurity> rememberMeConfig = http.rememberMe().key(key);
+        this.rememberMeCommon(rememberMeConfig);
+    }
+
+    private void rememberMePersistent(HttpSecurity http) throws IllegalStateException, Exception {
+        RememberMeConfigurer<HttpSecurity> rememberMeConfig = http.rememberMe()
+                .tokenRepository(this.persistentTokenRepository.orElseThrow(() -> new IllegalStateException(
+                        "Consider defining a bean of type 'org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;' in your configuration.")));
+        this.rememberMeCommon(rememberMeConfig);
+    }
+
+    private void rememberMeCommon(RememberMeConfigurer<HttpSecurity> rememberMeConfig) {
+        final RememberMe rememberMe = this.instantSecurityProperties.getLogin().getRememberMe();
+        final String rememberMeParameter = rememberMe.getRememberMeParameter();
+        final Integer tokenValiditySeconds = rememberMe.getTokenValiditySeconds();
+        final Boolean alwaysRemember = rememberMe.getAlwaysRemember();
+        final String cookieDomain = rememberMe.getCookieDomain();
+        final String cookieName = rememberMe.getCookieName();
+        final Boolean secureCookie = rememberMe.getSecureCookie();
+
+        if (StringUtils.hasText(rememberMeParameter)) {
+            rememberMeConfig.rememberMeParameter(rememberMeParameter);
+        }
+
+        if (StringUtils.hasText(cookieDomain)) {
+            rememberMeConfig.rememberMeCookieDomain(cookieDomain);
+        }
+
+        if (StringUtils.hasText(cookieName)) {
+            rememberMeConfig.rememberMeCookieName(cookieName);
+        }
+
+        if (tokenValiditySeconds != null && tokenValiditySeconds > 0) {
+            rememberMeConfig.tokenValiditySeconds(tokenValiditySeconds);
+        }
+
+        if (alwaysRemember != null) {
+            rememberMeConfig.alwaysRemember(alwaysRemember);
+        }
+
+        if (secureCookie != null) {
+            rememberMeConfig.useSecureCookie(secureCookie);
+        }
     }
 
     /**
