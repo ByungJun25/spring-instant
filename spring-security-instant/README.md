@@ -22,7 +22,7 @@ This is works as like simple tutorial code of spring-security project that sever
 * Java 8+
 
 ## Demo
-Please check [spring-security-instant-demo](#https://github.com/ByungJun25/spring-instant/tree/main/spring-security-instant-demo) repository
+Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring-instant/tree/main/spring-security-instant-demo) repository
 
 ## How to use?
 
