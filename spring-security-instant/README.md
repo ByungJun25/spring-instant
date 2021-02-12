@@ -8,7 +8,7 @@ This is works as like simple tutorial code of spring-security project that sever
 * Who doesn't want to spend much time to apply spring security for prototype application or toy project.
 * Who doesn't know about spring security but need a spring security for toy project.
 
-## What can you configure via `yaml`
+## What can you configure via yaml
 * support a form based login and logout.
 * support to validate authentication of ajax communication.
 * support to configure basic CORS.
