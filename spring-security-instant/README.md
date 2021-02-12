@@ -8,7 +8,7 @@ This is works as like simple tutorial code of spring-security project that sever
 * Who doesn't want to spend much time to apply spring security for prototype application or toy project.
 * Who doesn't know about spring security but need a spring security for toy project.
 
-## What can you configure via yaml
+## What can you configure via yaml?
 * support a form based login and logout.
 * support to validate authentication of ajax communication.
 * support to configure basic CORS.
@@ -151,10 +151,10 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
     2. PERSISTENT - This uses rememberMe option with database.  
         **For this option, you should implement `PersistentTokenRepository` interface and register it as Bean.**
 
-        For Example. 
-
+        For Example.  
         - PersistentTokenRepository: [spring security user instant - RememberMeTokenRepository](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/repository/RememberMeTokenRepository.java)
 
+        Configuration  
         ```yaml
         instant:
           security:
