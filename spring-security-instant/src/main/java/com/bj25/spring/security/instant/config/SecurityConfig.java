@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 ByungJun25
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bj25.spring.security.instant.config;
 
 import java.util.ArrayList;
@@ -38,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * Configuration for Spring Security
  * 
- * @author bj25
+ * @author ByungJun25
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -176,11 +192,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter(usernameParameter).passwordParameter(passwordParameter).failureUrl(failureUrl)
                 .permitAll();
 
+        // if rememberMe is enabled.
         if (isEnableRememberMe) {
             this.rememberMe(http);
         }
     }
 
+    /**
+     * <p>
+     * Configure rememberMe option.
+     * 
+     * @param http
+     * @throws Exception
+     */
     private void rememberMe(HttpSecurity http) throws Exception {
         final RememberMe.Type type = RememberMe.Type.valueOf(RememberMe.Type.class,
                 this.instantSecurityProperties.getLogin().getRememberMe().getType());
@@ -198,6 +222,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    /**
+     * <p>
+     * Configure rememberMe option, if the type of rememberMe is COOKIE_ONLY
+     * 
+     * @param http
+     * @throws Exception
+     */
     private void rememberMeCookieOnly(HttpSecurity http) throws Exception {
         final String key = this.instantSecurityProperties.getLogin().getRememberMe().getKey();
 
@@ -205,6 +236,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.rememberMeCommon(rememberMeConfig);
     }
 
+    /**
+     * <p>
+     * Configure rememberMe option, if the type of rememberMe is PERSISTENT
+     * 
+     * @param http
+     * @throws IllegalStateException
+     * @throws Exception
+     */
     private void rememberMePersistent(HttpSecurity http) throws IllegalStateException, Exception {
         RememberMeConfigurer<HttpSecurity> rememberMeConfig = http.rememberMe()
                 .tokenRepository(this.persistentTokenRepository.orElseThrow(() -> new IllegalStateException(
@@ -212,6 +251,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.rememberMeCommon(rememberMeConfig);
     }
 
+    /**
+     * <p>
+     * Configure common rememberMe option.
+     * 
+     * @param rememberMeConfig
+     */
     private void rememberMeCommon(RememberMeConfigurer<HttpSecurity> rememberMeConfig) {
         final RememberMe rememberMe = this.instantSecurityProperties.getLogin().getRememberMe();
         final String rememberMeParameter = rememberMe.getRememberMeParameter();
