@@ -5,12 +5,11 @@
 	<parent>
 		<groupId>com.github.ByungJun25</groupId>
 		<artifactId>spring-instant</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<groupId>com.bj25</groupId>
 	<artifactId>spring-security-instant-demo</artifactId>
-	<version>${project.parent.version}</version>
 
 	<name>spring-security-instant-demo</name>
 	<description>Demo project for Spring Security Instant</description>

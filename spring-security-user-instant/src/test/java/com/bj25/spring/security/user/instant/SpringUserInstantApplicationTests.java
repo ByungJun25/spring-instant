@@ -16,17 +16,17 @@
 
 package com.bj25.spring.security.user.instant;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * 
  * @author ByungJun25
  */
-@SpringBootTest
+//@SpringBootTest
 class SpringUserInstantApplicationTests {
 
-	@Test
+	//@Test
 	void contextLoads() {
 	}
 

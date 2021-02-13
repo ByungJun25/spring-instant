@@ -5,17 +5,16 @@
 	<parent>
 		<groupId>com.github.ByungJun25</groupId>
 		<artifactId>spring-instant</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<groupId>com.github.ByungJun25</groupId>
 	<artifactId>spring-security-user-instant</artifactId>
-	<version>${project.parent.version}</version>
 	<packaging>jar</packaging>
 
 	<name>spring-security-user-instant</name>
 	<description>User domain layer library for spring security instant</description>
-	<url>https://github.com/ByungJun25/spring-security-instant</url>
+	<url>https://github.com/ByungJun25/spring-instant/tree/main/spring-security-user-instant</url>
 
 	<inceptionYear>2021</inceptionYear>
 
@@ -41,7 +40,7 @@
 	</developers>
 
 	<scm>
-		<url>https://github.com/ByungJun25/spring-security-instant</url>
+		<url>https://github.com/ByungJun25/spring-instant/tree/main/spring-security-user-instant</url>
 	</scm>
 
 	<dependencies>

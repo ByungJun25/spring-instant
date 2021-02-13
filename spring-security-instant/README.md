@@ -26,13 +26,13 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
 ## How to use?
 
 1. Add dependency.  
-    You can check the latest version on [Maven Central Repository](#)
+    You can check the latest version on [GitHub Maven Repository](https://github.com/ByungJun25/spring-instant/packages/)
 
     ```xml
     <dependency>
-        <groupId>com.github.ByungJun25</groupId>
-        <artifactId>spring-security-instant</artifactId>
-        <version>1.0.0</version>
+      <groupId>com.github.ByungJun25</groupId>
+      <artifactId>spring-security-instant</artifactId>
+      <version>0.1.0</version>
     </dependency>
     ```
 
