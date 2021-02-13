@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 ByungJun25
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bj25.spring.security.instant.utils;
 
 import java.util.ArrayList;
@@ -15,9 +31,9 @@ import lombok.Setter;
 /**
  * <p>
  * This class is for injecting configuration values from external properties
- * (yml) files.
+ * (yaml) files.
  * 
- * @author bj25
+ * @author ByungJun25
  */
 @Setter
 @Getter
@@ -145,6 +161,67 @@ public class InstantSecurityProperties {
          * The HTTP parameter to look for the password when performing authentication.
          */
         private String passwordParameter = "password";
+
+        /**
+         * Allows configuring of Remember Me authentication.
+         */
+        private RememberMe rememberMe = new RememberMe();
+
+        @Setter
+        @Getter
+        public static class RememberMe {
+            /**
+             * Enable the remeber-me.
+             */
+            private boolean enabled = false;
+
+            /**
+             * Whether the cookie should always be created even if the remember-me parameter
+             * is not set.
+             */
+            private Boolean alwaysRemember;
+
+            /**
+             * Type of the remember-me option.
+             */
+            private String type = "COOKIE_ONLY";
+
+            /**
+             * Sets the key to identify tokens created for remember me authentication.
+             */
+            private String key = "rememberMeSecret";
+
+            /**
+             * The domain name within which the remember me cookie is visible.
+             */
+            private String cookieDomain;
+
+            /**
+             * Whether the cookie should be flagged as secure or not. Secure cookies can
+             * only be sent over an HTTPS connection and thus cannot be accidentally
+             * submitted over HTTP where they could be intercepted.
+             */
+            private Boolean secureCookie;
+
+            /**
+             * The name of cookie which store the token for remember me authentication.
+             */
+            private String cookieName = "remember-me";
+
+            /**
+             * The HTTP parameter used to indicate to remember the user at time of login.
+             */
+            private String rememberMeParameter = "remember-me";
+
+            /**
+             * Allows specifying how long (in seconds) a token is valid for.
+             */
+            private Integer tokenValiditySeconds;
+
+            public static enum Type {
+                COOKIE_ONLY, PERSISTENT;
+            }
+        }
     }
 
     @Setter
@@ -419,7 +496,7 @@ public class InstantSecurityProperties {
             /**
              * roles - Don't write {@code ROLE_}
              */
-            private String[] roles = new String[]{};
+            private String[] roles = new String[] {};
 
             /**
              * isAccountExpired

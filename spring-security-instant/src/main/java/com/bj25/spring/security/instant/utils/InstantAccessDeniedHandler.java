@@ -1,3 +1,19 @@
+/**
+ * Copyright 2021 ByungJun25
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bj25.spring.security.instant.utils;
 
 import java.io.IOException;
@@ -16,11 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- * 권한 부족으로 접근이 거절 되었을 경우, 이를 핸들링 하는 클래스입니다.
+ * This class handles when access is denied due to insufficient privileges.
  * <p>
- * property로 주어진 경로로 리다이렉트합니다.
+ * Redirect to the path given by the property.
  * 
- * @author bj25
+ * @author ByungJun25
  */
 @Slf4j
 @RequiredArgsConstructor

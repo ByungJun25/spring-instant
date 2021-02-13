@@ -54,6 +54,10 @@ instant:
       successUrl: /mypage # default - '/'
       authenticationFailureUrl: /login?error
       usernameParameter: email # default - 'username'
+      remember-me:
+        enabled: true
+        type: COOKIE_ONLY
+        token-validity-seconds: 86400
     logout:
       invalidateHttpSession: true
       clearAuthentication: true
