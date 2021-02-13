@@ -18,6 +18,10 @@ target/
 *.iws
 *.iml
 *.ipr
+out
+test-output
+atlassian-ide-plugin.xml
+.gradletasknamecache
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +35,33 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Spring framework gitignore ###
+*.java.hsp
+*.sonarj
+*.sw*
+.DS_Store
+bin
+build.sh
+integration-repo
+ivy-cache
+jxl.log
+jmx.log
+derby.log
+spring-test/test-output/
+.gradle
+argfile*
+pom.xml
+activemq-data/
+
+classes/
+/build
+buildSrc/build
+/spring-*/build
+/spring-core/kotlin-coroutines/build
+/framework-bom/build
+/integration-tests/build
+/src/asciidoc/build
+
+# Eclipse artifacts, including WTP generated manifests
+spring-*/src/main/java/META-INF/MANIFEST.MF
