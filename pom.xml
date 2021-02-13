@@ -11,7 +11,7 @@
 
 	<groupId>com.github.ByungJun25</groupId>
 	<artifactId>spring-instant</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 
 	<name>spring-instant</name>
@@ -45,14 +45,78 @@
 		<url>https://github.com/ByungJun25/spring-instant</url>
 	</scm>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub ByungJun25 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/byungjun25/spring-instant</url>
+		</repository>
+	</distributionManagement>
+
 	<modules>
 		<module>spring-security-instant</module>
-		<module>spring-security-instant-demo</module>
 		<module>spring-security-user-instant</module>
-		<module>spring-security-user-instant-demo</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<revision>${instant.version}</revision>
+				<changelist>-SNAPSHOT</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-dev-SNAPSHOT</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-test-SNAPSHOT</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>GA</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-GA</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>RC</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-RC</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>M</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-M</changelist>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<properties>
+				<revision>${instant.version}${changelist}</revision>
+				<changelist>-RELEASE</changelist>
+			</properties>
+		</profile>
+	</profiles>
+
 	<properties>
+		<!-- Project version -->
+		<instant.version>0.1.0</instant.version>
+		
 		<!-- java -->
 		<java.version>1.8</java.version>
 
