@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * <p>
  * 
+ * Simple custom error controller.
  * @author ByungJun25
  */
 @RequiredArgsConstructor

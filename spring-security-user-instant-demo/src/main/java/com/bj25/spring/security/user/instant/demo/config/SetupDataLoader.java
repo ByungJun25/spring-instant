@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * <p>
+ * Set up default user datas.
  * 
  * @author ByungJun25
  */

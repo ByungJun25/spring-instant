@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * <p>
+ * 
+ * Simple view controller.
  * 
  * @author ByungJun25
  */

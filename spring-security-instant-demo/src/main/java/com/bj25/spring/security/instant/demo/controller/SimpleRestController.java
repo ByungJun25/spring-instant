@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * <p>
+ * 
+ * Simple rest controller.
  * 
  * @author ByungJun25
  */
