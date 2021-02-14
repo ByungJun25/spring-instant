@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.bj25.spring.security.instant.config.SecurityInstantConfig;
+import com.bj25.spring.security.instant.config.InstantSecurityConfig;
 
 import org.springframework.context.annotation.Import;
 
@@ -33,6 +33,6 @@ import org.springframework.context.annotation.Import;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(SecurityInstantConfig.class)
+@Import(InstantSecurityConfig.class)
 public @interface EnableInstantSecurity {
 }

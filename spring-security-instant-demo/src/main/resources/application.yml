@@ -95,5 +95,3 @@ server:
   servlet:
     session:
       timeout: 60s ## for testing
-
-

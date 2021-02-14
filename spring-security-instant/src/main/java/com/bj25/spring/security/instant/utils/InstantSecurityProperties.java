@@ -46,11 +46,6 @@ public class InstantSecurityProperties {
     private InMemoryUserDetailsServiceProperties inMemory = new InMemoryUserDetailsServiceProperties();
 
     /**
-     * Configuration for Ajax
-     */
-    private AjaxProperties ajax = new AjaxProperties();
-
-    /**
      * Configuration for form login.
      */
     private LoginProperties login = new LoginProperties();
@@ -89,6 +84,11 @@ public class InstantSecurityProperties {
      * Configuration for AccessDeniedHandler
      */
     private AccessDeniedHandlerProperties accessDeniedHandler = new AccessDeniedHandlerProperties();
+
+    /**
+     * Configuration for Ajax
+     */
+    private AjaxProperties ajax = new AjaxProperties();
 
     @Setter
     @Getter

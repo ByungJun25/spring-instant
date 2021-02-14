@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package com.bj25.spring.security.instant;
+package com.bj25.spring.security.instant.config;
 
-//import org.junit.jupiter.api.Test;
-//import org.springframework.boot.test.context.SpringBootTest;
+import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
+ * <p>
+ * Spring Security Instant configuration.
+ * 
+ * <p>
+ * It will scan a pacakges of spring-security-instant library.
  * 
  * @author ByungJun25
  */
-//@SpringBootTest
-class SpringSecurityInstantApplicationTests {
-
-	//@Test
-	void contextLoads() {
-	}
-
+@ComponentScan(basePackages = InstantSecurityConstants.BASE_PACKAGES)
+@Configuration
+public class InstantSecurityConfig {
 }
