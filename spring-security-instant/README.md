@@ -331,7 +331,7 @@ Here you can see all properties that you can set up for your own security policy
 
 |Name|type|Default value|Description|
 |---|---|---|---|
-|`instant.security.authentication-entry-point.redirect-url`|String|`/login?error`|The URL to be redirected when unauthenticated users access the protected resource.|
+|`instant.security.authentication-entry-point.redirect-url`|String|`/login`|The URL to be redirected when unauthenticated users access the protected resource.|
 
 </details>
 

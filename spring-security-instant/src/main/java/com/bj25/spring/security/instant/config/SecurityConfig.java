@@ -440,6 +440,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         if (csrfProperties == null) {
             log.info("Apply default CSRF configuration.");
+            http.csrf();
             return;
         }
 

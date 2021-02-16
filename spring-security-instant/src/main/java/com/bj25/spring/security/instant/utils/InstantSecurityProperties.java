@@ -46,11 +46,6 @@ public class InstantSecurityProperties {
     private InMemoryUserDetailsServiceProperties inMemory = new InMemoryUserDetailsServiceProperties();
 
     /**
-     * Configuration for Ajax
-     */
-    private AjaxProperties ajax = new AjaxProperties();
-
-    /**
      * Configuration for form login.
      */
     private LoginProperties login = new LoginProperties();
@@ -90,6 +85,11 @@ public class InstantSecurityProperties {
      */
     private AccessDeniedHandlerProperties accessDeniedHandler = new AccessDeniedHandlerProperties();
 
+    /**
+     * Configuration for Ajax
+     */
+    private AjaxProperties ajax = new AjaxProperties();
+
     @Setter
     @Getter
     public static class AuthenticationEntryPointProperties {
@@ -97,7 +97,7 @@ public class InstantSecurityProperties {
          * The URL to be redirected when unauthenticated users access the protected
          * resource.
          */
-        private String redirectUrl = "/login?error";
+        private String redirectUrl = "/login";
     }
 
     @Setter
