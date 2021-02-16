@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * <p>
  * This is a utility class that checks whether the request is a request through
- * Ajax.
+ * Ajax. 
  * 
  * @author ByungJun25
  */
