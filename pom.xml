@@ -60,37 +60,17 @@
 
 	<profiles>
 		<profile>
-			<id>default</id>
+			<id>Dev</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<revision>${instant.version}</revision>
+				<revision>${instant.version}${changelist}</revision>
 				<changelist>-SNAPSHOT</changelist>
 			</properties>
 		</profile>
 		<profile>
-			<id>dev</id>
-			<properties>
-				<revision>${instant.version}${changelist}</revision>
-				<changelist>-dev-SNAPSHOT</changelist>
-			</properties>
-		</profile>
-		<profile>
-			<id>test</id>
-			<properties>
-				<revision>${instant.version}${changelist}</revision>
-				<changelist>-test-SNAPSHOT</changelist>
-			</properties>
-		</profile>
-		<profile>
-			<id>GA</id>
-			<properties>
-				<revision>${instant.version}${changelist}</revision>
-				<changelist>-GA</changelist>
-			</properties>
-		</profile>
-		<profile>
+			<!-- Release Candidate -->
 			<id>RC</id>
 			<properties>
 				<revision>${instant.version}${changelist}</revision>
@@ -98,17 +78,9 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>M</id>
+			<id>Release</id>
 			<properties>
-				<revision>${instant.version}${changelist}</revision>
-				<changelist>-M</changelist>
-			</properties>
-		</profile>
-		<profile>
-			<id>production</id>
-			<properties>
-				<revision>${instant.version}${changelist}</revision>
-				<changelist>-RELEASE</changelist>
+				<revision>${instant.version}</revision>
 			</properties>
 		</profile>
 	</profiles>
@@ -116,7 +88,7 @@
 	<properties>
 		<!-- Project version -->
 		<instant.version>0.1.0</instant.version>
-		
+
 		<!-- java -->
 		<java.version>1.8</java.version>
 
