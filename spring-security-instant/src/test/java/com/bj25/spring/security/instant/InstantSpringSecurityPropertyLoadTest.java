@@ -217,7 +217,7 @@ public class InstantSpringSecurityPropertyLoadTest {
 
         // then
         assertNotNull(authenticationEntryPoint);
-        assertEquals("/login?error", authenticationEntryPoint.getRedirectUrl());
+        assertEquals("/login", authenticationEntryPoint.getRedirectUrl());
     }
 
     @DisplayName("Can load default values related to accessDeniedHandler configuration.")

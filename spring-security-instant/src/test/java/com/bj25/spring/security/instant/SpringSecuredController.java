@@ -17,15 +17,16 @@
 package com.bj25.spring.security.instant;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 
  * @author ByungJun25
  */
-@Controller
+@RestController
 public class SpringSecuredController {
 
     @GetMapping
@@ -51,6 +52,11 @@ public class SpringSecuredController {
     @ResponseBody
     @GetMapping("/ajax")
     public ResponseEntity<Void> getMappingAjax() {
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> postMapping() {
         return ResponseEntity.ok().build();
     }
 

@@ -97,7 +97,7 @@ public class InstantSecurityProperties {
          * The URL to be redirected when unauthenticated users access the protected
          * resource.
          */
-        private String redirectUrl = "/login?error";
+        private String redirectUrl = "/login";
     }
 
     @Setter

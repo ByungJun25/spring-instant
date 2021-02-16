@@ -30,6 +30,8 @@ instant:
         - username: superAdmin@admin.com
           password: super123
           roles: USER, ADMIN
+    login:
+      success-url: "/loginSuccess"
 
 server:
   port: 8080
@@ -53,9 +55,6 @@ instant:
         GET:
           - /css/**
       permission-urls:
-        '[ROLE_ADMIN]':
-          - /admin
-          - /admin/**
         '[ROLE_USER]':
           - /user
           - /user/**
