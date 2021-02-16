@@ -1,5 +1,5 @@
 # spring-security-instant
-This is a simple library to apply form based spring security to your prototype application(or toy project) quickly and easily. No more using the same sample code every time, set it through `yaml` and use it right away.
+This is a simple library to apply spring security form login to your prototype application(or toy project) quickly and easily. No more using the same sample code every time, set it through `yaml` and use it right away.
 
 ## How it works and why do you made it?
 This is works as like simple tutorial code of spring-security project that several blogs explained. Then why do I create this project? As you know, normally we don't need a so complexed security for toy projects(or maybe need it), but we still need to implement same code for security. So I thought that it would be very convenient if I simply can set it through yaml.
