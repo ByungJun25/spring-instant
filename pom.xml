@@ -45,14 +45,6 @@
 		<url>https://github.com/ByungJun25/spring-instant</url>
 	</scm>
 
-	<distributionManagement>
-		<repository>
-			<id>github</id>
-			<name>GitHub ByungJun25 Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/byungjun25/spring-instant</url>
-		</repository>
-	</distributionManagement>
-
 	<modules>
 		<module>spring-security-instant</module>
 		<module>spring-security-user-instant</module>
@@ -79,6 +71,36 @@
 		</profile>
 		<profile>
 			<id>Release</id>
+			<properties>
+				<revision>${instant.version}</revision>
+			</properties>
+		</profile>
+		<profile>
+			<id>ossrh</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<name>Central Repository OSSRH</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+			<properties>
+				<revision>${instant.version}</revision>
+			</properties>
+		</profile>
+		<profile>
+			<id>github</id>
+			<distributionManagement>
+				<repository>
+					<id>github</id>
+					<name>GitHub ByungJun25 Apache Maven Packages</name>
+					<url>https://maven.pkg.github.com/byungjun25/spring-instant</url>
+				</repository>
+			</distributionManagement>
 			<properties>
 				<revision>${instant.version}</revision>
 			</properties>

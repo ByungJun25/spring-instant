@@ -47,10 +47,7 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Build with Maven
-        run: mvn -B package -PRC --file pom.xml
-
       - name: Publish to GitHub Packages Apache Maven
-        run: mvn deploy -PRC
+        run: mvn --batch-mode deploy -PRC
         env:
           GITHUB_TOKEN: ${{ github.token }}
