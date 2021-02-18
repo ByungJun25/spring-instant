@@ -1,6 +1,10 @@
 # spring-instant
 This is a simple wrapping library of Spring framework. It helps you to build your prototype application quickly and easily.
 
+## What You Need
+- JDK 1.8 or later
+- Spring boot 2.4.2 or later
+
 ## Pakages
 You can check all pakage information in [here](https://github.com/ByungJun25/spring-instant/packages/)
 

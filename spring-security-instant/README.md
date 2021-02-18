@@ -32,7 +32,7 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
     <dependency>
       <groupId>com.github.ByungJun25</groupId>
       <artifactId>spring-security-instant</artifactId>
-      <version>0.1.0</version>
+      <version>${version}</version>
     </dependency>
     ```
 
