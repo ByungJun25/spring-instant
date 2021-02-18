@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.github.ByungJun25</groupId>
 		<artifactId>spring-instant</artifactId>
-		<version>${revision}</version>
+		<version>${revision}${changelist}</version>
 	</parent>
 
 	<groupId>com.bj25</groupId>

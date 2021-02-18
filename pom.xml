@@ -11,7 +11,7 @@
 
 	<groupId>com.github.ByungJun25</groupId>
 	<artifactId>spring-instant</artifactId>
-	<version>${revision}</version>
+	<version>${revision}${changelist}</version>
 	<packaging>pom</packaging>
 
 	<name>spring-instant</name>
@@ -45,6 +45,16 @@
 		<url>https://github.com/ByungJun25/spring-instant</url>
 	</scm>
 
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/ByungJun25/spring-instant/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>GitHub Actions</system>
+		<url>https://github.com/ByungJun25/spring-instant/actions</url>
+	</ciManagement>
+
 	<modules>
 		<module>spring-security-instant</module>
 		<module>spring-security-user-instant</module>
@@ -57,7 +67,6 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<revision>${instant.version}${changelist}</revision>
 				<changelist>-SNAPSHOT</changelist>
 			</properties>
 		</profile>
@@ -65,20 +74,30 @@
 			<!-- Release Candidate -->
 			<id>RC</id>
 			<properties>
-				<revision>${instant.version}${changelist}</revision>
 				<changelist>-RC</changelist>
 			</properties>
 		</profile>
 		<profile>
 			<id>Release</id>
 			<properties>
-				<revision>${instant.version}</revision>
+				<changelist></changelist>
 			</properties>
 		</profile>
 		<profile>
 			<id>ossrh</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>false</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
@@ -140,7 +159,7 @@
 				</repository>
 			</distributionManagement>
 			<properties>
-				<revision>${instant.version}</revision>
+				<changelist></changelist>
 			</properties>
 		</profile>
 		<profile>
@@ -153,15 +172,44 @@
 				</repository>
 			</distributionManagement>
 			<properties>
-				<revision>${instant.version}</revision>
+				<changelist></changelist>
 			</properties>
 		</profile>
 	</profiles>
 
-	<properties>
-		<!-- Project version -->
-		<instant.version>0.1.0</instant.version>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
+	<properties>
+		<revision>0.1.1</revision>
+		<changelist>-SNAPSHOT</changelist>
 		<!-- java -->
 		<java.version>1.8</java.version>
 
