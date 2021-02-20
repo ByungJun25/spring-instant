@@ -90,6 +90,29 @@ public class InstantSecurityProperties {
      */
     private AjaxProperties ajax = new AjaxProperties();
 
+    /**
+     * Configuration for channel security
+     */
+    private ChannelProperties channel = new ChannelProperties();
+
+    @Getter
+    @Setter
+    public static class ChannelProperties {
+        /**
+         * if true, it will configure channel security.
+         */
+        private boolean enable = false;
+        /**
+         * if true, any requests will require secure channel 
+         */
+        private boolean allSecure = false;
+        /**
+         * The URLs per httpMethod - [key: httpMethod, value: paths]
+         */
+        private Map<String, String[]> pahtsPerHttpMethod = new HashMap<>();
+
+    }
+
     @Setter
     @Getter
     public static class AuthenticationEntryPointProperties {
@@ -265,7 +288,8 @@ public class InstantSecurityProperties {
         private Map<String, String[]> ignorePaths = new HashMap<>();
 
         /**
-         * The URLs per roles - [key: path, value: [Key: httpMethod, value: authorities]].
+         * The URLs per roles - [key: path, value: [Key: httpMethod, value:
+         * authorities]].
          */
         private Map<String, Map<String, String[]>> permissionUrls = new HashMap<>();
 

@@ -24,6 +24,7 @@ import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
 import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.ChannelProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
@@ -36,6 +37,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ChannelSecurityConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -114,6 +116,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.sessionManageMentConfigure(http);
         this.ExceptionHandlingConfigure(http);
         this.csrfConfigure(http);
+        this.ChannelConfigure(http);
+    }
+
+    /**
+     * <p>
+     * Configures channel security.
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void ChannelConfigure(HttpSecurity http) throws Exception {
+        final ChannelProperties channel = this.instantSecurityProperties.getChannel();
+        if (channel.isEnable()) {
+            ChannelSecurityConfigurer<?>.ChannelRequestMatcherRegistry registry = http.requiresChannel();
+
+            if (channel.isAllSecure()) {
+                registry.anyRequest().requiresSecure();
+            } else {
+                Map<String, String[]> pahtsPerHttpMethod = channel.getPahtsPerHttpMethod();
+                pahtsPerHttpMethod.forEach((httpMethodName, paths) -> {
+                    final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+                    if (httpMethod != null) {
+                        registry.antMatchers(httpMethod, paths).requiresSecure();
+                    } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                        registry.antMatchers(paths).requiresSecure();
+                    }
+                });
+            }
+        }
     }
 
     /**
