@@ -55,13 +55,15 @@ instant:
         GET:
           - /css/**
       permission-urls:
-        '[ROLE_USER]':
-          - /user
-          - /user/**
+        '[/user]':
+          '[*]':
+            - ROLE_USER
       all:
-        - /
+        '[*]':
+          - /
       anonymous:
-        - /anonymous
+        '[*]':
+          - /anonymous
 
 server:
   port: 8080

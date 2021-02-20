@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import com.bj25.spring.security.instant.annotation.EnableInstantSecurity;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -69,12 +69,81 @@ public class InstantSpringSecurityPermissionTest {
         .andExpect(status().isOk());
     }
 
+    @DisplayName("Can send Post request with user role")
+    @Order(21)
+    @WithMockUser(roles = "USER")
+    @Test
+    void userRolePostTest() throws Exception {
+        // when
+        mvc.perform(post("/user").with(csrf()))
+
+        // then
+        .andExpect(status().isOk());
+    }
+
+    @DisplayName("Can send Put request with user role")
+    @Order(22)
+    @WithMockUser(roles = "USER")
+    @Test
+    void userRolePutTest() throws Exception {
+        // when
+        mvc.perform(put("/user").with(csrf()))
+
+        // then
+        .andExpect(status().isOk());
+    }
+
+    @DisplayName("Can send Delete request with user role")
+    @Order(23)
+    @WithMockUser(roles = "USER")
+    @Test
+    void userRoleDeleteTest() throws Exception {
+        // when
+        mvc.perform(delete("/user").with(csrf()))
+
+        // then
+        .andExpect(status().isOk());
+    }
+
     @DisplayName("Cannot access user page without authentication")
     @Order(30)
     @Test
     void userRoleFailWithoutAuthenticationTest() throws Exception {
         // when
         mvc.perform(get("/user"))
+
+        // then
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+    }
+
+    @DisplayName("Cannot send Post user without authentication")
+    @Order(31)
+    @Test
+    void userRolePostFailWithoutAuthenticationTest() throws Exception {
+        // when
+        mvc.perform(post("/user").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+    }
+
+    @DisplayName("Cannot send Put user without authentication")
+    @Order(32)
+    @Test
+    void userRolePutFailWithoutAuthenticationTest() throws Exception {
+        // when
+        mvc.perform(put("/user").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+    }
+
+    @DisplayName("Cannot send Delete user without authentication")
+    @Order(33)
+    @Test
+    void userRoleDeleteFailWithoutAuthenticationTest() throws Exception {
+        // when
+        mvc.perform(delete("/user").with(csrf()))
 
         // then
         .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));

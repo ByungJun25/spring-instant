@@ -31,6 +31,7 @@ public final class InstantSecurityConstants {
     public static final String PREFIX_INSTANT_SECURITY_PROPERTIES = "instant.security";
     public static final String INMEMORY_PROPERTY_NAME = "inMemory.enabled";
     public static final String INMEMORY_PROPERTY_VALUE = "true";
+    public static final String HTTTP_METHOD_ALL_SYMBOL = "*";
 
     private InstantSecurityConstants() {
         throw new IllegalStateException("Cannot create instance of SecurityConstants");

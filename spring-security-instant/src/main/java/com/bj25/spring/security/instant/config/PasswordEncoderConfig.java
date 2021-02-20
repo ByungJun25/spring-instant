@@ -35,7 +35,7 @@ public class PasswordEncoderConfig {
      * <p>
      * Create a PasswordEncoder bean, if there is no passwordEncoder bean.
      * 
-     * @return
+     * @return PasswordEncoder
      */
     @ConditionalOnMissingBean
     @Bean

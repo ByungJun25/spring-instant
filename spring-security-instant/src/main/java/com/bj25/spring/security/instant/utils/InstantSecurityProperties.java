@@ -260,24 +260,24 @@ public class InstantSecurityProperties {
     public static class PermissionProperties {
         /**
          * Allows adding RequestMatcher instances that should that Spring Security
-         * should ignore. - [key: httpMethod, value:path].
+         * should ignore. - [key: httpMethod, value:paths].
          */
         private Map<String, String[]> ignorePaths = new HashMap<>();
 
         /**
-         * The URLs per roles - [key: authority name, value: path].
+         * The URLs per roles - [key: path, value: [Key: httpMethod, value: authorities]].
          */
-        private Map<String, String[]> permissionUrls = new HashMap<>();
+        private Map<String, Map<String, String[]>> permissionUrls = new HashMap<>();
 
         /**
-         * The URLs for anonymous.
+         * The URLs for anonymous. - [key: httpMethod, value:paths].
          */
-        private String[] anonymous = new String[] {};
+        private Map<String, String[]> anonymous = new HashMap<>();
 
         /**
-         * The URLs for permitAll.
+         * The URLs for permitAll. - [key: httpMethod, value:paths].
          */
-        private String[] all = new String[] {};
+        private Map<String, String[]> all = new HashMap<>();
     }
 
     @Setter

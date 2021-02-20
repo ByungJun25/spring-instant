@@ -36,19 +36,24 @@ instant:
           - /js/**
           - /img/**
       permission-urls:
-        ## paths per each roles for security configuration
-        ## ROLE_ADMIN
-        '[ROLE_ADMIN]':
-          - /admin
-          - /admin/**
-        ##ROLE_USER
-        '[ROLE_USER]':
-          - /user
-          - /user/**
+        '[/admin]':
+          '[*]':
+            - ROLE_ADMIN
+        '[/admin/**]':
+          '[*]':
+            - ROLE_ADMIN
+        '[/user]':
+          '[*]':
+            - ROLE_USER
+        '[/user/**]':
+          '[*]':
+            - ROLE_USER
       all:
-        - /
+        '[*]':
+          - /
       anonymous:
-        - /anonymous
+        '[*]':
+          - /anonymous
     login:
       page: /login
       successUrl: /mypage # default - '/'

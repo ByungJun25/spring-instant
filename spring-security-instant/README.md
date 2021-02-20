@@ -67,6 +67,8 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
         - UserDetailsService: [spring security user instant - DefaultUserDetailsService](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/service/DefaultUserDetailsService.java)
 
 3. Set up permission per URLs.  
+    **This library will protect any request as default.**
+
     1. ignore-paths - you can set the URLs per HttpMethod to ignore security.
 
         <details>
@@ -85,7 +87,7 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
 
         </details>
 
-    2. permission-urls - you can set the URLs per Authority.
+    2. permission-urls - you can set the authority per URLs.
 
         <details>
         <summary>Example - Click to expand.</summary>
@@ -95,10 +97,19 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               permission-urls:
-                '[ROLE_ADMIN]':
-                  - /admin
-                '[ROLE_USER]':
-                  - /user
+                '[/admin]':
+                    '[*]': ## for all HttpMethods
+                      - ROLE_ADMIN
+                '[/user]':
+                    GET:
+                      - ROLE_USER
+                      - ROLE_ADMIN
+                    POST:
+                      - ROLE_USER
+                    PUT:
+                      - ROLE_USER
+                    DELETE:
+                      - ROLE_ADMIN
         ```
 
         </details>
@@ -113,7 +124,8 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               all:
-                - /
+                GET:
+                  - /
         ```
 
         </details>
@@ -128,7 +140,8 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               anonymous:
-                - /anonymous
+                GET:
+                  - /anonymous
         ```
 
         </details>
@@ -251,9 +264,9 @@ Here you can see all properties that you can set up for your own security policy
 |Name|type|Default value|Description|
 |---|---|---|---|
 |`instant.security.permission.ignore-paths.[httpMethod]`|String[]|`{}`|Allows adding RequestMatcher instances that should that Spring Security should ignore.|
-|`instant.security.permission.permission-urls.[authorityName]`|String[]|`{}`|The URLs per roles|
-|`instant.security.permission.anonymous`|String[]|`{}`|The URLs for anonymous.|
-|`instant.security.permission.all`|String[]|`{}`|The URLs for permitAll.|
+|`instant.security.permission.permission-urls.[path].[httpMethod]`|String[]|`{}`|The authorities per URLs|
+|`instant.security.permission.anonymous.[httpMethod]`|String[]|`{}`|The URLs for anonymous.|
+|`instant.security.permission.all.[httpMethod]`|String[]|`{}`|The URLs for permitAll.|
 
 </details>
 

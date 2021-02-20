@@ -144,8 +144,10 @@ public class InstantSpringSecurityPropertyLoadTest {
         assertEquals(0, permission.getIgnorePaths().size());
         assertNotNull(permission.getPermissionUrls());
         assertEquals(0, permission.getPermissionUrls().size());
-        assertArrayEquals(new String[] {}, permission.getAnonymous());
-        assertArrayEquals(new String[] {}, permission.getAll());
+        assertNotNull(permission.getAnonymous());
+        assertEquals(0, permission.getAnonymous().size());
+        assertNotNull(permission.getAll());
+        assertEquals(0, permission.getAll().size());
     }
 
     @DisplayName("Can load default values related to session-management configuration.")

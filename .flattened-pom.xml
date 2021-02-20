@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.github.ByungJun25</groupId>
   <artifactId>spring-instant</artifactId>
-  <version>0.5.8</version>
+  <version>0.1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>spring-instant</name>
   <description>Spring Instant Library.</description>
@@ -53,7 +53,7 @@
   <properties>
     <java.version>1.8</java.version>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <revision>0.0.1</revision>
+    <revision>0.1.3</revision>
     <maven.compiler.target>1.8</maven.compiler.target>
     <changelist>-SNAPSHOT</changelist>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -194,6 +194,9 @@
           <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
       </distributionManagement>
+      <properties>
+        <changelist></changelist>
+      </properties>
     </profile>
     <profile>
       <id>github</id>
@@ -204,6 +207,9 @@
           <url>https://maven.pkg.github.com/byungjun25/spring-instant</url>
         </repository>
       </distributionManagement>
+      <properties>
+        <changelist></changelist>
+      </properties>
     </profile>
   </profiles>
 </project>

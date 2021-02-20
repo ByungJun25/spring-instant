@@ -47,7 +47,7 @@ public class InMemoryUserDetailsConfig {
 
     /**
      * Create InMemoryUserDetailsManager bean, only if {@code inMemory.enabled} is true.
-     * @return
+     * @return UserDetailsService
      */
     @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.INMEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.INMEMORY_PROPERTY_VALUE)
     @Bean
