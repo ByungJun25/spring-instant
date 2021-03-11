@@ -36,6 +36,9 @@ public class InstantSpringSecurityInMemoryTest {
     @Autowired
     private InstantSecurityProperties securityProperties;
 
+    //@Autowired
+    //private ApplicationContext context;
+
     @DisplayName("Can load all configuration successfully")
     @Order(0)
     @Test

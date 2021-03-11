@@ -18,7 +18,7 @@ spring:
 
 instant:
   security:
-    inMemory:
+    in-memory:
       enabled: true
       users:
         - username: user@user.com

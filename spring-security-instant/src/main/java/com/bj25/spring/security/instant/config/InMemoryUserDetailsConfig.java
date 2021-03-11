@@ -46,10 +46,12 @@ public class InMemoryUserDetailsConfig {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Create InMemoryUserDetailsManager bean, only if {@code inMemory.enabled} is true.
+     * Create InMemoryUserDetailsManager bean, only if {@code inMemory.enabled} is
+     * true.
+     * 
      * @return UserDetailsService
      */
-    @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.INMEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.INMEMORY_PROPERTY_VALUE)
+    @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.IN_MEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.INMEMORY_PROPERTY_VALUE)
     @Bean
     public UserDetailsService inMemoryUserDetailsManager() {
         final List<Client> users = this.instantSecurityProperties.getInMemory().getUsers();

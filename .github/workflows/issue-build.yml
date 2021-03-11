@@ -6,10 +6,10 @@ name: Spring Instant [Issue] CI with Maven
 on:
   push:
     branches:
-      - "!main"
+      - 'issue_*'
   pull_request:
     branches:
-      - "!main"
+      - 'issue_*'
 
 jobs:
   build-and-test:
