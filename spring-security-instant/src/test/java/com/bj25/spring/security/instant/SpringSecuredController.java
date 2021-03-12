@@ -90,7 +90,7 @@ public class SpringSecuredController {
     public ResponseEntity<String> deleteMappingAdmin() {
         return ResponseEntity.ok().body("admin - delete");
     }
-    
+
     @GetMapping("/anonymous")
     public ResponseEntity<String> getMappingAnonymous() {
         return ResponseEntity.ok().body("anonymous - get");
@@ -114,6 +114,11 @@ public class SpringSecuredController {
     @ResponseBody
     @GetMapping("/ajax")
     public ResponseEntity<Void> getMappingAjax() {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/secured")
+    public ResponseEntity<Void> securedChannelMapping() {
         return ResponseEntity.ok().build();
     }
 

@@ -358,3 +358,16 @@ Here you can see all properties that you can set up for your own security policy
 |`instant.security.access-denied-handler.redirect-url`|String|`/error/accessDenied`|The URL to be redirected when unauthorized users access the protected resource.|
 
 </details>
+
+#### 11. Channel
+
+<details>
+<summary>Click to expand!</summary>
+
+|Name|type|Default value|Description|
+|---|---|---|---|
+|`instant.security.channel.enable`|boolean|`false`|if true, it will configure channel security.|
+|`instant.security.channel.all-secure`|boolean|`false`|if true, any requests will require secure channel.|
+|`instant.security.channel.[httpMethod]`|String[]|`{}`|The URLs per httpMethod|
+
+</details>

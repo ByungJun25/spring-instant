@@ -71,3 +71,31 @@ server:
   servlet:
     session:
       timeout: 60s
+
+--- 
+
+spring:
+  config:
+    activate:
+      on-profile:
+        - channel
+
+instant:
+  security:
+    channel:
+      enabled: true
+      secure-paths:
+        '[*]':
+          - /secured
+    permission:
+      all:
+        '[*]':
+          - /
+          - /secured
+
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60s

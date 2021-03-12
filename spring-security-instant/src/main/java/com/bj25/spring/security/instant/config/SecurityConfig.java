@@ -128,13 +128,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private void ChannelConfigure(HttpSecurity http) throws Exception {
         final ChannelProperties channel = this.instantSecurityProperties.getChannel();
-        if (channel.isEnable()) {
+        if (channel.isEnabled()) {
             ChannelSecurityConfigurer<?>.ChannelRequestMatcherRegistry registry = http.requiresChannel();
 
             if (channel.isAllSecure()) {
                 registry.anyRequest().requiresSecure();
             } else {
-                Map<String, String[]> pahtsPerHttpMethod = channel.getPahtsPerHttpMethod();
+                Map<String, String[]> pahtsPerHttpMethod = channel.getSecurePaths();
                 pahtsPerHttpMethod.forEach((httpMethodName, paths) -> {
                     final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
                     if (httpMethod != null) {

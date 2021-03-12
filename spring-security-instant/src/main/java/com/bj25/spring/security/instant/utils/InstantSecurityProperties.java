@@ -101,15 +101,15 @@ public class InstantSecurityProperties {
         /**
          * if true, it will configure channel security.
          */
-        private boolean enable = false;
+        private boolean enabled = false;
         /**
-         * if true, any requests will require secure channel 
+         * if true, any requests will require secure channel.
          */
         private boolean allSecure = false;
         /**
          * The URLs per httpMethod - [key: httpMethod, value: paths]
          */
-        private Map<String, String[]> pahtsPerHttpMethod = new HashMap<>();
+        private Map<String, String[]> securePaths = new HashMap<>();
 
     }
 
