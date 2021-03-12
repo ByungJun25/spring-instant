@@ -24,6 +24,7 @@ import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
 import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
+import com.bj25.spring.security.instant.utils.InstantStringUtils;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.ChannelProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
@@ -85,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
+        log.debug("Configure ignored paths.");
+
         Map<String, String[]> ignorePathsByHttpMethod = this.instantSecurityProperties.getPermission().getIgnorePaths();
         ignorePathsByHttpMethod.forEach((httpMethodName, paths) -> {
             final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
@@ -93,6 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
                 web.ignoring().antMatchers(paths);
             }
+            log.debug("Ignored paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
         });
     }
 
@@ -129,9 +133,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private void ChannelConfigure(HttpSecurity http) throws Exception {
         final ChannelProperties channel = this.instantSecurityProperties.getChannel();
         if (channel.isEnabled()) {
+            log.debug("Channel configuration was enabled.");
+
             ChannelSecurityConfigurer<?>.ChannelRequestMatcherRegistry registry = http.requiresChannel();
 
             if (channel.isAllSecure()) {
+                log.debug("Every paths will be required to use https");
+
                 registry.anyRequest().requiresSecure();
             } else {
                 Map<String, String[]> pahtsPerHttpMethod = channel.getSecurePaths();
@@ -142,6 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
                         registry.antMatchers(paths).requiresSecure();
                     }
+                    log.debug("Required to use https - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
                 });
             }
         }
@@ -210,6 +219,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
                 http.authorizeRequests().antMatchers(paths).anonymous();
             }
+            log.debug("Required anonymous authorization - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
         }
     }
 
@@ -237,6 +247,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
                 http.authorizeRequests().antMatchers(paths).permitAll();
             }
+            log.debug("permitAll - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
         }
     }
 
@@ -622,6 +633,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
                     http.authorizeRequests().antMatchers(path).hasAnyAuthority(subEntry.getValue());
                 }
+                log.debug("Required authorization - path: [{}] / HttpMethod: [{}] / authorization: [{}]", path, httpMethodName, InstantStringUtils.arrayToString(subEntry.getValue()));
             }
         }
     }

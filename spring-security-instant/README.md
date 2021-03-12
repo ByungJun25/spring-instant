@@ -371,3 +371,6 @@ Here you can see all properties that you can set up for your own security policy
 |`instant.security.channel.[httpMethod]`|String[]|`{}`|The URLs per httpMethod|
 
 </details>
+
+## Log messages for debug
+You can see the log messages for debug by using `logging.level` property of Spring framework. For example: [application.yml](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-instant/src/test/resources/application.yml)

@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
+import com.bj25.spring.security.instant.utils.InstantStringUtils;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.InMemoryUserDetailsServiceProperties.Client;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -38,6 +40,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * @author ByungJun25
  */
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class InMemoryUserDetailsConfig {
@@ -54,14 +57,20 @@ public class InMemoryUserDetailsConfig {
     @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.IN_MEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.INMEMORY_PROPERTY_VALUE)
     @Bean
     public UserDetailsService inMemoryUserDetailsManager() {
+        log.debug("Create an UserDetailsService Bean.");
+
         final List<Client> users = this.instantSecurityProperties.getInMemory().getUsers();
         final InMemoryUserDetailsManager inMemoryDetailsService = new InMemoryUserDetailsManager();
 
         if (users == null || users.isEmpty()) {
+            log.debug("There is no users! It will return UserDetailsService without any defined users.");
+
             return inMemoryDetailsService;
         }
 
         for (Client u : users) {
+            log.debug("Create user - username: [{}], roles: [{}]", u.getUsername(), InstantStringUtils.arrayToString(u.getRoles()));
+
             inMemoryDetailsService.createUser(
                     User.builder().username(u.getUsername()).password(this.passwordEncoder.encode(u.getPassword()))
                             .roles(u.getRoles()).accountExpired(u.isAccountExpired()).accountLocked(u.isLock())

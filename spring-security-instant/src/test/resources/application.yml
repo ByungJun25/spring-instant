@@ -99,3 +99,55 @@ server:
   servlet:
     session:
       timeout: 60s
+
+--- 
+
+spring:
+  config:
+    activate:
+      on-profile:
+        - logging
+
+logging:
+  level:
+    com:
+      bj25:
+        spring:
+          security:
+            instant: DEBUG
+
+instant:
+  security:
+    in-memory:
+      enabled: true
+      users:
+        - username: user@user.com
+          password: user123
+          roles: USER
+        - username: admin@admin.com
+          password: admin123
+          roles: ADMIN
+        - username: superAdmin@admin.com
+          password: super123
+          roles: USER, ADMIN
+    permission:
+      ignore-paths:
+        GET:
+          - /css/**
+      permission-urls:
+        '[/user]':
+          '[*]':
+            - ROLE_USER
+      all:
+        '[*]':
+          - /
+      anonymous:
+        '[*]':
+          - /anonymous
+
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60s
