@@ -1,4 +1,9 @@
 # spring-security-instant
+![build badge](https://img.shields.io/github/workflow/status/ByungJun25/spring-instant/Spring%20Instant%20%5BMain%5D%20CI%20with%20Maven?logo=github)
+![release badge](https://img.shields.io/github/v/release/ByungJun25/spring-instant?logo=github)
+![maven badge](https://img.shields.io/maven-central/v/com.github.ByungJun25/spring-security-instant)
+![license badge](https://img.shields.io/github/license/ByungJun25/spring-instant)
+
 This is a simple library to apply spring security form login to your prototype application(or toy project) quickly and easily. No more using the same sample code every time, set it through `yaml` and use it right away.
 
 ## How it works and why do you made it?
