@@ -113,7 +113,7 @@ public class InstantSpringSecurityPermissionTest {
         mvc.perform(get("/user"))
 
         // then
-        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @DisplayName("Cannot send Post user without authentication")
@@ -124,7 +124,7 @@ public class InstantSpringSecurityPermissionTest {
         mvc.perform(post("/user").with(csrf()))
 
         // then
-        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @DisplayName("Cannot send Put user without authentication")
@@ -135,7 +135,7 @@ public class InstantSpringSecurityPermissionTest {
         mvc.perform(put("/user").with(csrf()))
 
         // then
-        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @DisplayName("Cannot send Delete user without authentication")
@@ -146,7 +146,7 @@ public class InstantSpringSecurityPermissionTest {
         mvc.perform(delete("/user").with(csrf()))
 
         // then
-        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
+        .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @DisplayName("Cannot access user page with other role")

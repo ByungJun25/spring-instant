@@ -151,3 +151,52 @@ server:
   servlet:
     session:
       timeout: 60s
+
+--- 
+
+spring:
+  config:
+    activate:
+      on-profile:
+        - securedIP
+
+instant:
+  security:
+    secured-ip:
+      enabled: true
+      base-path-pattern: /secured/**
+      permissions:
+        '[/localhostIP]':
+          '[*]': '127.0.0.1'
+        '[/randomIP]':
+          '[*]': '11.0.0.1'
+    permission:
+      ignore-paths:
+        GET:
+          - /css/**
+      permission-urls:
+        '[/user]':
+          '[*]':
+            - ROLE_USER
+      all:
+        '[*]':
+          - /
+      anonymous:
+        '[*]':
+          - /anonymous
+
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 60s
+
+logging:
+  level:
+    com:
+      bj25:
+        spring:
+          security:
+            instant:
+              config: DEBUG

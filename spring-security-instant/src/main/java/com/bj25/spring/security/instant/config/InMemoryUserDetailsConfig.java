@@ -54,7 +54,7 @@ public class InMemoryUserDetailsConfig {
      * 
      * @return UserDetailsService
      */
-    @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.IN_MEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.INMEMORY_PROPERTY_VALUE)
+    @ConditionalOnProperty(prefix = InstantSecurityConstants.PREFIX_INSTANT_SECURITY_PROPERTIES, name = InstantSecurityConstants.IN_MEMORY_PROPERTY_NAME, havingValue = InstantSecurityConstants.TRUE)
     @Bean
     public UserDetailsService inMemoryUserDetailsManager() {
         log.debug("Create an UserDetailsService Bean.");

@@ -95,6 +95,11 @@ public class InstantSecurityProperties {
      */
     private ChannelProperties channel = new ChannelProperties();
 
+    /**
+     * Configuration for permission per IP
+     */
+    private SecuredIP securedIp = new SecuredIP();
+
     @Getter
     @Setter
     public static class ChannelProperties {
@@ -110,7 +115,6 @@ public class InstantSecurityProperties {
          * The URLs per httpMethod - [key: httpMethod, value: paths]
          */
         private Map<String, String[]> securePaths = new HashMap<>();
-
     }
 
     @Setter
@@ -189,6 +193,25 @@ public class InstantSecurityProperties {
          * Allows configuring of Remember Me authentication.
          */
         private RememberMe rememberMe = new RememberMe();
+
+        /**
+         * Allows configuring of LoginUrlAuthenticationEntryPoint.
+         */
+        private AuthenticationEntryPointProperty entryPointProperty = new AuthenticationEntryPointProperty();
+
+        @Setter
+        @Getter
+        public static class AuthenticationEntryPointProperty {
+            /**
+             * Set to true to force login form access to be via https.
+             */
+            private boolean forceHttps = false;
+            /**
+             * Tells if we are to do a forward to the loginFormUrl using the
+             * RequestDispatcher, instead of a 302 redirect.
+             */
+            private boolean useForward = false;
+        }
 
         @Setter
         @Getter
@@ -302,6 +325,28 @@ public class InstantSecurityProperties {
          * The URLs for permitAll. - [key: httpMethod, value:paths].
          */
         private Map<String, String[]> all = new HashMap<>();
+
+    }
+
+    @Setter
+    @Getter
+    public static class SecuredIP {
+        /**
+         * Enable Security Configuration per IP-Address.
+         */
+        private boolean enabled = false;
+
+        /**
+         * <p>
+         * A Base path pattern for http security configuration.
+         */
+        private String basePathPattern = "/secured/**";
+
+        /**
+         * The URLs per IP-Address - [key: path, value: [Key: httpMethod, value:
+         * IP-Address]].
+         */
+        private Map<String, Map<String, String>> permissions = new HashMap<>();
     }
 
     @Setter

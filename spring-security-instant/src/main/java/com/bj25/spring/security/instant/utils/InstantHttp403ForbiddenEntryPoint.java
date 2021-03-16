@@ -18,44 +18,32 @@ package com.bj25.spring.security.instant.utils;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
- * This class handles when an unauthenticated user accesses a protected resource.
+ * This class handles when an unauthenticated user accesses a protected
+ * resource.
  * <p>
- * Redirect to the path given by the property.
+ * return 403 status code.
  * 
  * @author ByungJun25
  */
 @RequiredArgsConstructor
 @Component
-public class InstantAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-    private final AjaxHelper ajaxHelper;
-    private final InstantSecurityProperties instantSecurityProperties;
+public class InstantHttp403ForbiddenEntryPoint extends Http403ForbiddenEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
-            throws IOException, ServletException {
-
-        String redirectURL = request.getContextPath()
-                + this.instantSecurityProperties.getAuthenticationEntryPoint().getRedirectUrl();
-
-        if (this.ajaxHelper.isAjaxRequest(request)) {
-            redirectURL = request.getContextPath()
-                    + this.instantSecurityProperties.getAjax().getAuthenticationFailureUrl();
-        }
-
-        response.sendRedirect(redirectURL);
+            throws IOException {
+        super.commence(request, response, e);
     }
 
 }
