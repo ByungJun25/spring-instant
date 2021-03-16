@@ -213,6 +213,9 @@
 		<!-- java -->
 		<java.version>1.8</java.version>
 
+		<!-- library -->
+		<commons.validator.version>1.7</commons.validator.version>
+
 		<!-- build -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>

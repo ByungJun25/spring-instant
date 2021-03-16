@@ -22,21 +22,20 @@ import java.util.Optional;
 
 import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
-import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
+import com.bj25.spring.security.instant.utils.InstantLoginUrlAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
-import com.bj25.spring.security.instant.utils.InstantStringUtils;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.ChannelProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties.FixationProperties.FixationType;
+import com.bj25.spring.security.instant.utils.InstantStringUtils;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ChannelSecurityConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
@@ -60,7 +59,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -71,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Optional<PersistentTokenRepository> persistentTokenRepository;
 
     private final InstantAccessDeniedHandler instantAccessDeniedHandler;
-    private final InstantAuthenticationEntryPoint instantAuthenticationEntryPoint;
+    private final InstantLoginUrlAuthenticationEntryPoint instantLoginUrlAuthenticationEntryPoint;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -118,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.formLoginConfigure(http);
         this.logoutConfigure(http);
         this.sessionManageMentConfigure(http);
-        this.ExceptionHandlingConfigure(http);
+        this.exceptionHandlingConfigure(http);
         this.csrfConfigure(http);
         this.ChannelConfigure(http);
     }
@@ -511,14 +509,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 
      * @see InstantSecurityProperties
      * @see InstantAccessDeniedHandler
-     * @see InstantAuthenticationEntryPoint
+     * @see InstantLoginUrlAuthenticationEntryPoint
      * 
      * @param http
      * @throws Exception
      */
-    private void ExceptionHandlingConfigure(HttpSecurity http) throws Exception {
+    private void exceptionHandlingConfigure(HttpSecurity http) throws Exception {
         http.exceptionHandling().accessDeniedHandler(this.instantAccessDeniedHandler)
-                .authenticationEntryPoint(this.instantAuthenticationEntryPoint);
+                .authenticationEntryPoint(this.instantLoginUrlAuthenticationEntryPoint);
     }
 
     /**
@@ -614,7 +612,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Configurate permission per paths.
      * 
      * @param http
-     * @param authsPerUrl
      * @throws Exception
      */
     private void setPermissionPerUrls(HttpSecurity http) throws Exception {
@@ -622,18 +619,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .getPermissionUrls();
 
         for (Entry<String, Map<String, String[]>> entry : permissionUrls.entrySet()) {
-            String path = entry.getKey();
-            Map<String, String[]> authsPerHttpMethod = entry.getValue();
+            final String path = entry.getKey();
+            final Map<String, String[]> authsPerHttpMethod = entry.getValue();
 
-            for (Entry<String, String[]> subEntry : authsPerHttpMethod.entrySet()) {
-                final String httpMethodName = subEntry.getKey();
-                final HttpMethod o_httpMethod = HttpMethod.resolve(httpMethodName);
-                if (o_httpMethod != null) {
-                    http.authorizeRequests().antMatchers(o_httpMethod, path).hasAnyAuthority(subEntry.getValue());
-                } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
-                    http.authorizeRequests().antMatchers(path).hasAnyAuthority(subEntry.getValue());
+            if(StringUtils.hasText(path)) {
+                for (Entry<String, String[]> subEntry : authsPerHttpMethod.entrySet()) {
+                    final String[] authorities = subEntry.getValue();
+    
+                    if(authorities == null || authorities.length == 0) {
+                        log.warn("There is no authorities for '{}'. It will be ignored.", path);
+                        continue;
+                    }
+    
+                    final String httpMethodName = subEntry.getKey();
+                    final HttpMethod o_httpMethod = HttpMethod.resolve(httpMethodName);
+                    if (o_httpMethod != null) {
+                        http.authorizeRequests().antMatchers(o_httpMethod, path).hasAnyAuthority(authorities);
+                    } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                        http.authorizeRequests().antMatchers(path).hasAnyAuthority(authorities);
+                    }
+                    log.debug("Required authorization - path: [{}] / HttpMethod: [{}] / authorization: [{}]", path, httpMethodName, InstantStringUtils.arrayToString(subEntry.getValue()));
                 }
-                log.debug("Required authorization - path: [{}] / HttpMethod: [{}] / authorization: [{}]", path, httpMethodName, InstantStringUtils.arrayToString(subEntry.getValue()));
             }
         }
     }

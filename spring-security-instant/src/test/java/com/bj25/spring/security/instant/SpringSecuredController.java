@@ -117,6 +117,16 @@ public class SpringSecuredController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/secured/localhostIP")
+    public ResponseEntity<Void> getMappingLocalhostIP() {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/secured/randomIP")
+    public ResponseEntity<Void> getMappingRandomIP() {
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/secured")
     public ResponseEntity<Void> securedChannelMapping() {
         return ResponseEntity.ok().build();

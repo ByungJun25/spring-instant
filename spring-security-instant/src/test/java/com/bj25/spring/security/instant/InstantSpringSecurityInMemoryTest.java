@@ -109,7 +109,7 @@ public class InstantSpringSecurityInMemoryTest {
         // when
         mvc.perform(get("/")).andExpect(status().is3xxRedirection())
         // then
-        .andExpect(redirectedUrl("/login"));
+        .andExpect(redirectedUrl("http://localhost/login"));
     }
 
 }
