@@ -30,6 +30,7 @@ import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.AccessDeniedHandlerProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.AjaxProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.AuthenticationEntryPointProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.ChannelProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CorsProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties.CookieRepository;
@@ -38,6 +39,7 @@ import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginPro
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LogoutProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.PermissionProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SecuredIP;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
 
 import org.junit.jupiter.api.DisplayName;
@@ -247,6 +249,36 @@ public class InstantSpringSecurityPropertyLoadTest {
         assertEquals("XMLHttpRequest", ajax.getHeaderValue());
         assertEquals("/api/exception/authentication", ajax.getAuthenticationFailureUrl());
         assertEquals("/api/exception/authorization", ajax.getAccessDeniedUrl());
+    }
+
+    @DisplayName("Can load default values related to channel configuration.")
+    @Order(110)
+    @Test
+    void load_channel_default_value_successfully_test() {
+        // given
+        final ChannelProperties channel = this.properties.getChannel();
+
+        // then
+        assertNotNull(channel);
+        assertFalse(channel.isEnabled());
+        assertFalse(channel.isAllSecure());
+        assertNotNull(channel.getSecurePaths());
+        assertEquals(0, channel.getSecurePaths().size());
+    }
+
+    @DisplayName("Can load default values related to securedIP configuration.")
+    @Order(120)
+    @Test
+    void load_securedIP_default_value_successfully_test() {
+        // given
+        final SecuredIP securedIp = this.properties.getSecuredIp();
+
+        // then
+        assertNotNull(securedIp);
+        assertFalse(securedIp.isEnabled());
+        assertEquals("/secured/**", securedIp.getBasePathPattern());
+        assertNotNull(securedIp.getPermissions());
+        assertEquals(0, securedIp.getPermissions().size());
     }
 
 }
