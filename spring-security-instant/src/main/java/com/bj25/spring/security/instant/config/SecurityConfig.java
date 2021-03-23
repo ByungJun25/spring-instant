@@ -192,6 +192,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private void authorizeRequestConfigure(HttpSecurity http) throws Exception {
         this.anonymousConfigure(http);
         this.permitAllConfigure(http);
+        this.denyAllConfigure(http);
         http.authorizeRequests().anyRequest().authenticated();
     }
 
@@ -246,6 +247,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 http.authorizeRequests().antMatchers(paths).permitAll();
             }
             log.debug("permitAll - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
+        }
+    }
+
+    /**
+     * <p>
+     * Configure denyAll path.
+     * 
+     * @see InstantSecurityProperties
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void denyAllConfigure(HttpSecurity http) throws Exception {
+        this.defaultPermitAll(http);
+
+        final Map<String, String[]> denyAllUrls = this.instantSecurityProperties.getPermission().getDenyAll();
+
+        for (Entry<String, String[]> entry : denyAllUrls.entrySet()) {
+            final String httpMethodName = entry.getKey();
+            final String[] paths = entry.getValue();
+
+            final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+            if (httpMethod != null) {
+                http.authorizeRequests().antMatchers(httpMethod, paths).denyAll();
+            } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                http.authorizeRequests().antMatchers(paths).denyAll();
+            }
+            log.debug("denyAll - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
         }
     }
 

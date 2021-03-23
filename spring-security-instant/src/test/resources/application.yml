@@ -64,6 +64,9 @@ instant:
       anonymous:
         '[*]':
           - /anonymous
+      deny-all:
+        '[*]':
+          - /deny
 
 server:
   port: 8080

@@ -326,6 +326,11 @@ public class InstantSecurityProperties {
          */
         private Map<String, String[]> all = new HashMap<>();
 
+        /**
+         * The URLs for denyAll. - [key: httpMethod, value:paths].
+         */
+        private Map<String, String[]> denyAll = new HashMap<>();
+
     }
 
     @Setter

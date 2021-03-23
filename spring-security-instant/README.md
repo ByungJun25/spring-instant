@@ -151,6 +151,24 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
 
         </details>
 
+    5. denyAll - you can set the URLs to deny a request.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              deny-all:
+                GET:
+                  - /denyGet
+                '[*]':
+                  - /denyAll
+        ```
+
+        </details>
+
 4. (Optional) Set up rememberMe.  
     You can turn on rememberMe option.
 
