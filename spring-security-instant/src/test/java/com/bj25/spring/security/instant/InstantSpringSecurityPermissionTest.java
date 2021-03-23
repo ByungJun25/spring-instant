@@ -195,4 +195,106 @@ public class InstantSpringSecurityPermissionTest {
         // then
         .andExpect(status().isOk());
     }
+
+    @DisplayName("Cannot access denyAll url without authentication - GET")
+    @Order(70)
+    @Test
+    void denyAllGetTest() throws Exception {
+        // when
+        mvc.perform(get("/deny"))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+
+    @DisplayName("Cannot access denyAll url without authentication - POST")
+    @Order(71)
+    @Test
+    void denyAllPostTest() throws Exception {
+        // when
+        mvc.perform(post("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @DisplayName("Cannot access denyAll url without authentication - PUT")
+    @Order(72)
+    @Test
+    void denyAllPutTest() throws Exception {
+        // when
+        mvc.perform(put("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @DisplayName("Cannot access denyAll url without authentication - DELETE")
+    @Order(73)
+    @Test
+    void denyAllDeleteTest() throws Exception {
+        // when
+        mvc.perform(delete("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @DisplayName("Cannot access denyAll url with authenticated user - GET")
+    @Order(74)
+    @WithMockUser
+    @Test
+    void denyAllGetWithAuthenticatedUserTest() throws Exception {
+        // when
+        mvc.perform(get("/deny"))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(this.securityProperties.getAccessDeniedHandler().getRedirectUrl()));
+    }
+
+
+    @DisplayName("Cannot access denyAll url with authenticated user - POST")
+    @Order(75)
+    @WithMockUser
+    @Test
+    void denyAllPostWithAuthenticatedUserTest() throws Exception {
+        // when
+        mvc.perform(post("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(this.securityProperties.getAccessDeniedHandler().getRedirectUrl()));
+    }
+
+    @DisplayName("Cannot access denyAll url with authenticated user - PUT")
+    @Order(76)
+    @WithMockUser
+    @Test
+    void denyAllPutWithAuthenticatedUserTest() throws Exception {
+        // when
+        mvc.perform(put("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(this.securityProperties.getAccessDeniedHandler().getRedirectUrl()));
+    }
+
+    @DisplayName("Cannot access denyAll url with authenticated user - DELETE")
+    @Order(77)
+    @WithMockUser
+    @Test
+    void denyAllDeleteWithAuthenticatedUserTest() throws Exception {
+        // when
+        mvc.perform(delete("/deny").with(csrf()))
+
+        // then
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(this.securityProperties.getAccessDeniedHandler().getRedirectUrl()));
+    }
 }

@@ -111,6 +111,26 @@ public class SpringSecuredController {
         return ResponseEntity.ok().body("anonymous - delete");
     }
 
+    @GetMapping("/deny")
+    public ResponseEntity<String> getMappingDenyAll() {
+        return ResponseEntity.ok().body("denyAll - get");
+    }
+
+    @PostMapping("/deny")
+    public ResponseEntity<String> postMappingDenyAll() {
+        return ResponseEntity.ok().body("denyAll - post");
+    }
+
+    @PutMapping("/deny")
+    public ResponseEntity<String> putMappingDenyAll() {
+        return ResponseEntity.ok().body("denyAll - put");
+    }
+
+    @DeleteMapping("/deny")
+    public ResponseEntity<String> deleteMappingDenyAll() {
+        return ResponseEntity.ok().body("denyAll - delete");
+    }
+
     @ResponseBody
     @GetMapping("/ajax")
     public ResponseEntity<Void> getMappingAjax() {
