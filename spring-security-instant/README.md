@@ -287,13 +287,26 @@ Here you can see all properties that you can set up for your own security policy
 |Name|type|Default value|Description|
 |---|---|---|---|
 |`instant.security.permission.ignore-paths.[httpMethod]`|String[]|`{}`|Allows adding RequestMatcher instances that should that Spring Security should ignore.|
-|`instant.security.permission.permission-urls.[path].[httpMethod]`|String[]|`{}`|The authorities per URLs|
+|`instant.security.permission.permission-urls.[path].[httpMethod]`|String[]|`{}`|The authorities per URLs.|
 |`instant.security.permission.anonymous.[httpMethod]`|String[]|`{}`|The URLs for anonymous.|
 |`instant.security.permission.all.[httpMethod]`|String[]|`{}`|The URLs for permitAll.|
 
 </details>
 
-#### 5. Session management
+#### 5. allowed IP per URL
+
+<details>
+<summary>Click to expand!</summary>
+
+|Name|type|Default value|Description|
+|---|---|---|---|
+|`instant.security.secured-ip.enabled`|boolean|`false`|Enable Security Configuration per IP-Address.|
+|`instant.security.secured-ip.base-path-pattern`|String|`/secured/**`|A Base path pattern for http security configuration.|
+|`instant.security.secured-ip.permissions.[path].[httpMethod]`|String|`{}`|The IP-Address for URL.|
+
+</details>
+
+#### 6. Session management
 
 <details>
 <summary>Click to expand!</summary>
@@ -313,7 +326,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 6. CORS
+#### 7. CORS
 
 <details>
 <summary>Click to expand!</summary>
@@ -327,7 +340,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 7. CSRF
+#### 8. CSRF
 
 <details>
 <summary>Click to expand!</summary>
@@ -346,7 +359,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 8. AJAX
+#### 9. AJAX
 
 <details>
 <summary>Click to expand!</summary>
@@ -360,7 +373,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 9. AuthenticationEntryPoint
+#### 10. AuthenticationEntryPoint
 
 <details>
 <summary>Click to expand!</summary>
@@ -371,7 +384,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 10. AccessDeniedHandler
+#### 11. AccessDeniedHandler
 
 <details>
 <summary>Click to expand!</summary>
@@ -382,7 +395,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 11. Channel
+#### 12. Channel
 
 <details>
 <summary>Click to expand!</summary>
