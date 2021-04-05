@@ -1,13 +1,19 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Spring Instant [Tag - Release Candidate] Maven package
+name: Create pre-release
 
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'rc*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'prefix for pre-release (ie. rc)'
+        required: true
+        default: 'rc'
+      version:
+        description: 'version for pre-release (ie. 1.0.0)'
+        required: true
+        default: '0.0.1'
 
 jobs:
   create-prerelease:
@@ -19,6 +25,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
 
       - name: Create Prerelease
         id: create_prerelease
@@ -26,14 +34,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Prerelease ${{ github.ref }}
+          tag_name: ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }}
+          release_name: 🚀 Pre-Release ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }}
           body: |
-            Prerelease ${{ github.ref }}
+            🚀 Pre-Release ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }} version from ${{ github.ref }}
           draft: false
           prerelease: true
 
   build-deploy:
+    needs: create-prerelease
     name: deploy GitHub Maven Package
     runs-on: ubuntu-latest
 
@@ -41,13 +50,17 @@ jobs:
       - name: echo build and deploy job start
         run: echo build and deploy job start
 
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
 
       - name: Publish to GitHub Packages Apache Maven
-        run: mvn --batch-mode deploy -PRC
+        run: mvn --batch-mode -Drevision=${{ github.event.inputs.version }} -PRC deploy 
         env:
           GITHUB_TOKEN: ${{ github.token }}

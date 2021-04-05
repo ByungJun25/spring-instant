@@ -16,27 +16,28 @@
 
 package com.bj25.spring.security.instant.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
+import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
 import com.bj25.spring.security.instant.utils.InstantAccessDeniedHandler;
-import com.bj25.spring.security.instant.utils.InstantAuthenticationEntryPoint;
+import com.bj25.spring.security.instant.utils.InstantLoginUrlAuthenticationEntryPoint;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties.ChannelProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.CsrfProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.LoginProperties.RememberMe;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties;
 import com.bj25.spring.security.instant.utils.InstantSecurityProperties.SessionManagementProperties.FixationProperties.FixationType;
+import com.bj25.spring.security.instant.utils.InstantStringUtils;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ChannelSecurityConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,7 +59,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Optional<PersistentTokenRepository> persistentTokenRepository;
 
     private final InstantAccessDeniedHandler instantAccessDeniedHandler;
-    private final InstantAuthenticationEntryPoint instantAuthenticationEntryPoint;
+    private final InstantLoginUrlAuthenticationEntryPoint instantLoginUrlAuthenticationEntryPoint;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -84,12 +84,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
+        log.debug("Configure ignored paths.");
+
         Map<String, String[]> ignorePathsByHttpMethod = this.instantSecurityProperties.getPermission().getIgnorePaths();
         ignorePathsByHttpMethod.forEach((httpMethodName, paths) -> {
             final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
             if (httpMethod != null) {
                 web.ignoring().antMatchers(httpMethod, paths);
+            } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                web.ignoring().antMatchers(paths);
             }
+            log.debug("Ignored paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
         });
     }
 
@@ -111,8 +116,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.formLoginConfigure(http);
         this.logoutConfigure(http);
         this.sessionManageMentConfigure(http);
-        this.ExceptionHandlingConfigure(http);
+        this.exceptionHandlingConfigure(http);
         this.csrfConfigure(http);
+        this.ChannelConfigure(http);
+    }
+
+    /**
+     * <p>
+     * Configures channel security.
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void ChannelConfigure(HttpSecurity http) throws Exception {
+        final ChannelProperties channel = this.instantSecurityProperties.getChannel();
+        if (channel.isEnabled()) {
+            log.debug("Channel configuration was enabled.");
+
+            ChannelSecurityConfigurer<?>.ChannelRequestMatcherRegistry registry = http.requiresChannel();
+
+            if (channel.isAllSecure()) {
+                log.debug("Every paths will be required to use https");
+
+                registry.anyRequest().requiresSecure();
+            } else {
+                Map<String, String[]> pahtsPerHttpMethod = channel.getSecurePaths();
+                pahtsPerHttpMethod.forEach((httpMethodName, paths) -> {
+                    final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+                    if (httpMethod != null) {
+                        registry.antMatchers(httpMethod, paths).requiresSecure();
+                    } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                        registry.antMatchers(paths).requiresSecure();
+                    }
+                    log.debug("Required to use https - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
+                });
+            }
+        }
     }
 
     /**
@@ -141,14 +180,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * <p>
-     * Configure a security for paths.
+     * Configure anonymous and permitAll path.
      * <p>
-     * A default action is that it allows all paths.
-     * <p>
-     * properties:
-     * <ul>
-     * <li>{@code instant.security.authenticated-only-urls.[path]}</li>
-     * </ul>
+     * It will protect any request as default.
      * 
      * @see InstantSecurityProperties
      * 
@@ -156,11 +190,111 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     private void authorizeRequestConfigure(HttpSecurity http) throws Exception {
-        final String[] anonymousUrls = this.instantSecurityProperties.getPermission().getAnonymous();
-        final String[] permitAllUrls = this.instantSecurityProperties.getPermission().getAll();
+        this.anonymousConfigure(http);
+        this.permitAllConfigure(http);
+        this.denyAllConfigure(http);
+        http.authorizeRequests().anyRequest().authenticated();
+    }
 
-        http.authorizeRequests().antMatchers(anonymousUrls).anonymous().antMatchers(permitAllUrls).permitAll()
-                .anyRequest().authenticated();
+    /**
+     * <p>
+     * Configure anonymous path.
+     * 
+     * @see InstantSecurityProperties
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void anonymousConfigure(HttpSecurity http) throws Exception {
+        final Map<String, String[]> anonymousUrls = this.instantSecurityProperties.getPermission().getAnonymous();
+
+        for (Entry<String, String[]> entry : anonymousUrls.entrySet()) {
+            final String httpMethodName = entry.getKey();
+            final String[] paths = entry.getValue();
+
+            final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+            if (httpMethod != null) {
+                http.authorizeRequests().antMatchers(httpMethod, paths).anonymous();
+            } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                http.authorizeRequests().antMatchers(paths).anonymous();
+            }
+            log.debug("Required anonymous authorization - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
+        }
+    }
+
+    /**
+     * <p>
+     * Configure permitAll path.
+     * 
+     * @see InstantSecurityProperties
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void permitAllConfigure(HttpSecurity http) throws Exception {
+        this.defaultPermitAll(http);
+
+        final Map<String, String[]> permitAllUrls = this.instantSecurityProperties.getPermission().getAll();
+
+        for (Entry<String, String[]> entry : permitAllUrls.entrySet()) {
+            final String httpMethodName = entry.getKey();
+            final String[] paths = entry.getValue();
+
+            final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+            if (httpMethod != null) {
+                http.authorizeRequests().antMatchers(httpMethod, paths).permitAll();
+            } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                http.authorizeRequests().antMatchers(paths).permitAll();
+            }
+            log.debug("permitAll - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
+        }
+    }
+
+    /**
+     * <p>
+     * Configure denyAll path.
+     * 
+     * @see InstantSecurityProperties
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void denyAllConfigure(HttpSecurity http) throws Exception {
+        this.defaultPermitAll(http);
+
+        final Map<String, String[]> denyAllUrls = this.instantSecurityProperties.getPermission().getDenyAll();
+
+        for (Entry<String, String[]> entry : denyAllUrls.entrySet()) {
+            final String httpMethodName = entry.getKey();
+            final String[] paths = entry.getValue();
+
+            final HttpMethod httpMethod = HttpMethod.resolve(httpMethodName);
+            if (httpMethod != null) {
+                http.authorizeRequests().antMatchers(httpMethod, paths).denyAll();
+            } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                http.authorizeRequests().antMatchers(paths).denyAll();
+            }
+            log.debug("denyAll - paths: [{}] / HttpMethod: [{}]", InstantStringUtils.arrayToString(paths), httpMethodName);
+        }
+    }
+
+    /**
+     * <p>
+     * Configure permitAll for default failure redirectURLs.
+     * 
+     * @param http
+     * @throws Exception
+     */
+    private void defaultPermitAll(HttpSecurity http) throws Exception {
+        final String defaultAccessDeniedURL = this.instantSecurityProperties.getAccessDeniedHandler().getRedirectUrl();
+        final String defaultAjaxAccessDeniedURL = this.instantSecurityProperties.getAjax().getAccessDeniedUrl();
+        final String defaultAuthenticationEntryPointURL = this.instantSecurityProperties.getAuthenticationEntryPoint()
+                .getRedirectUrl();
+        final String defaultAjaxAuthenticationFailureURL = this.instantSecurityProperties.getAjax()
+                .getAuthenticationFailureUrl();
+
+        http.authorizeRequests().antMatchers(HttpMethod.GET, defaultAccessDeniedURL, defaultAjaxAccessDeniedURL,
+                defaultAuthenticationEntryPointURL, defaultAjaxAuthenticationFailureURL).permitAll();
     }
 
     /**
@@ -404,14 +538,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 
      * @see InstantSecurityProperties
      * @see InstantAccessDeniedHandler
-     * @see InstantAuthenticationEntryPoint
+     * @see InstantLoginUrlAuthenticationEntryPoint
      * 
      * @param http
      * @throws Exception
      */
-    private void ExceptionHandlingConfigure(HttpSecurity http) throws Exception {
+    private void exceptionHandlingConfigure(HttpSecurity http) throws Exception {
         http.exceptionHandling().accessDeniedHandler(this.instantAccessDeniedHandler)
-                .authenticationEntryPoint(this.instantAuthenticationEntryPoint);
+                .authenticationEntryPoint(this.instantLoginUrlAuthenticationEntryPoint);
     }
 
     /**
@@ -479,7 +613,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * </ul>
      * 
      * @param csrfProperties
-     * @return
+     * @return CsrfTokenRepository
      */
     private CsrfTokenRepository generateCookieCsrfTokenRepository(CsrfProperties csrfProperties) {
         final boolean httpOnly = csrfProperties.getCookieRepository().isHttpOnly();
@@ -507,44 +641,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Configurate permission per paths.
      * 
      * @param http
-     * @param authsPerUrl
      * @throws Exception
      */
     private void setPermissionPerUrls(HttpSecurity http) throws Exception {
-        final Map<String, List<String>> authsPerUrl = this
-                .getAuthsPerUrlMap(this.instantSecurityProperties.getPermission().getPermissionUrls());
+        final Map<String, Map<String, String[]>> permissionUrls = this.instantSecurityProperties.getPermission()
+                .getPermissionUrls();
 
-        for (Map.Entry<String, List<String>> entry : authsPerUrl.entrySet()) {
-            final String url = entry.getKey();
-            String[] authorities = entry.getValue().toArray(new String[0]);
-            http.authorizeRequests().antMatchers(url).hasAnyAuthority(authorities);
-        }
-    }
+        for (Entry<String, Map<String, String[]>> entry : permissionUrls.entrySet()) {
+            final String path = entry.getKey();
+            final Map<String, String[]> authsPerHttpMethod = entry.getValue();
 
-    /**
-     * <p>
-     * Change the list of path per authority to list of authority per path.
-     * 
-     * @param authUrls
-     * @return list of authority per path
-     */
-    private Map<String, List<String>> getAuthsPerUrlMap(Map<String, String[]> authUrls) {
-        Map<String, List<String>> resultMap = new HashMap<>();
-
-        authUrls.forEach((auth, urls) -> {
-            for (String url : urls) {
-                if (resultMap.containsKey(url)) {
-                    List<String> auths = resultMap.get(url);
-                    auths.add(auth);
-                } else {
-                    List<String> auths = new ArrayList<>();
-                    auths.add(auth);
-                    resultMap.put(url, auths);
+            if(StringUtils.hasText(path)) {
+                for (Entry<String, String[]> subEntry : authsPerHttpMethod.entrySet()) {
+                    final String[] authorities = subEntry.getValue();
+    
+                    if(authorities == null || authorities.length == 0) {
+                        log.warn("There is no authorities for '{}'. It will be ignored.", path);
+                        continue;
+                    }
+    
+                    final String httpMethodName = subEntry.getKey();
+                    final HttpMethod o_httpMethod = HttpMethod.resolve(httpMethodName);
+                    if (o_httpMethod != null) {
+                        http.authorizeRequests().antMatchers(o_httpMethod, path).hasAnyAuthority(authorities);
+                    } else if (InstantSecurityConstants.HTTTP_METHOD_ALL_SYMBOL.equals(httpMethodName)) {
+                        http.authorizeRequests().antMatchers(path).hasAnyAuthority(authorities);
+                    }
+                    log.debug("Required authorization - path: [{}] / HttpMethod: [{}] / authorization: [{}]", path, httpMethodName, InstantStringUtils.arrayToString(subEntry.getValue()));
                 }
             }
-        });
-
-        return resultMap;
+        }
     }
 
     /**

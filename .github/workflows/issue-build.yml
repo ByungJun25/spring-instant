@@ -1,15 +1,15 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Spring Instant [Issue] CI with Maven
+name: Test and build [issue_*] branch
 
 on:
   push:
     branches:
-      - "!main"
+      - 'issue_*'
   pull_request:
     branches:
-      - "!main"
+      - 'issue_*'
 
 jobs:
   build-and-test:
@@ -21,6 +21,8 @@ jobs:
 
       - name: checkout main code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
 
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1

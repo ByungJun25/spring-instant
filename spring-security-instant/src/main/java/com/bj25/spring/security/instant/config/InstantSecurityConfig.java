@@ -16,10 +16,19 @@
 
 package com.bj25.spring.security.instant.config;
 
+import javax.annotation.PostConstruct;
+
 import com.bj25.spring.security.instant.constants.InstantSecurityConstants;
+import com.bj25.spring.security.instant.utils.InstantSecurityProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -30,7 +39,21 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author ByungJun25
  */
+@Slf4j
+@RequiredArgsConstructor
 @ComponentScan(basePackages = InstantSecurityConstants.BASE_PACKAGES)
+@EnableWebSecurity
 @Configuration
 public class InstantSecurityConfig {
+    private final InstantSecurityProperties instantSecurityProperties;
+    private final ObjectMapper objectMapper;
+
+    @PostConstruct
+    public void init() {
+        try {
+            log.debug(this.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.instantSecurityProperties));
+        } catch (JsonProcessingException e) {
+            log.error("Cannot to print InstantSecurityProperties.");
+        }
+    }
 }

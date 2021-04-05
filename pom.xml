@@ -204,14 +204,22 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
 		</plugins>
 	</build>
 
 	<properties>
-		<revision>0.1.1</revision>
+		<revision>0.1.4</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<!-- java -->
 		<java.version>1.8</java.version>
+
+		<!-- library -->
+		<commons.validator.version>1.7</commons.validator.version>
 
 		<!-- build -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

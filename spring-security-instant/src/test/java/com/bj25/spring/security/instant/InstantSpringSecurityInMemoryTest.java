@@ -36,6 +36,9 @@ public class InstantSpringSecurityInMemoryTest {
     @Autowired
     private InstantSecurityProperties securityProperties;
 
+    //@Autowired
+    //private ApplicationContext context;
+
     @DisplayName("Can load all configuration successfully")
     @Order(0)
     @Test
@@ -106,7 +109,7 @@ public class InstantSpringSecurityInMemoryTest {
         // when
         mvc.perform(get("/")).andExpect(status().is3xxRedirection())
         // then
-        .andExpect(redirectedUrl("/login"));
+        .andExpect(redirectedUrl("http://localhost/login"));
     }
 
 }

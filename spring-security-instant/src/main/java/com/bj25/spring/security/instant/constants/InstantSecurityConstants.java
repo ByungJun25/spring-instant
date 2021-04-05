@@ -29,8 +29,10 @@ public final class InstantSecurityConstants {
     public static final String BEAN_INSTANT_CORS_CONFIG_SOURCE = "instantCorsConfigurationSource";
     public static final String BEAN_INSTANT_SECURITY_PROPERTIES = "instantSecurityProperties";
     public static final String PREFIX_INSTANT_SECURITY_PROPERTIES = "instant.security";
-    public static final String INMEMORY_PROPERTY_NAME = "inMemory.enabled";
-    public static final String INMEMORY_PROPERTY_VALUE = "true";
+    public static final String IN_MEMORY_PROPERTY_NAME = "in-memory.enabled";
+    public static final String TRUE = "true";
+    public static final String SECURED_IP_PROPERTY_NAME = "secured-ip.enabled";
+    public static final String HTTTP_METHOD_ALL_SYMBOL = "*";
 
     private InstantSecurityConstants() {
         throw new IllegalStateException("Cannot create instance of SecurityConstants");

@@ -1,16 +1,41 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Spring Instant [Tag - Release] Maven package
+name: Create release
 
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'prefix for release (ie. rc)'
+        required: true
+        default: 'v'
+      version:
+        description: 'version for release (ie. 1.0.0)'
+        required: true
+        default: '0.0.1'
 
 jobs:
+  validate-version:
+    name: validate version
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo start validating version
+        run: echo Starting validating version
+      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: extract-project-version
+        run: echo "::set-output name=project-version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)"
+        shell: bash
+      
+      - name: validate version
+        if: ${{ github.event.inputs.version != steps.extract-project-version.outputs.project-version }}
+        run: exit 1
+
   create-release:
+    needs: validate-version
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -26,14 +51,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }}
+          release_name: 🎉 Release ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }}
           body: |
-            Release ${{ github.ref }}
+            🎉 Release ${{ github.event.inputs.prefix }}${{ github.event.inputs.version }}
           draft: false
           prerelease: false
 
   build-deploy:
+    needs: [validate-version, create-release]
     name: deploy GitHub Maven Package
     runs-on: ubuntu-latest
 

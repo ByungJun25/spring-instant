@@ -1,4 +1,9 @@
 # spring-security-instant
+![build badge](https://img.shields.io/github/workflow/status/ByungJun25/spring-instant/Spring%20Instant%20%5BMain%5D%20CI%20with%20Maven?logo=github)
+![release badge](https://img.shields.io/github/v/release/ByungJun25/spring-instant?logo=github)
+![maven badge](https://img.shields.io/maven-central/v/com.github.ByungJun25/spring-security-instant)
+![license badge](https://img.shields.io/github/license/ByungJun25/spring-instant)
+
 This is a simple library to apply spring security form login to your prototype application(or toy project) quickly and easily. No more using the same sample code every time, set it through `yaml` and use it right away.
 
 ## How it works and why do you made it?
@@ -67,6 +72,8 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
         - UserDetailsService: [spring security user instant - DefaultUserDetailsService](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-user-instant/src/main/java/com/bj25/spring/security/user/instant/service/DefaultUserDetailsService.java)
 
 3. Set up permission per URLs.  
+    **This library will protect any request as default.**
+
     1. ignore-paths - you can set the URLs per HttpMethod to ignore security.
 
         <details>
@@ -85,7 +92,7 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
 
         </details>
 
-    2. permission-urls - you can set the URLs per Authority.
+    2. permission-urls - you can set the authority per URLs.
 
         <details>
         <summary>Example - Click to expand.</summary>
@@ -95,10 +102,19 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               permission-urls:
-                '[ROLE_ADMIN]':
-                  - /admin
-                '[ROLE_USER]':
-                  - /user
+                '[/admin]':
+                    '[*]': ## for all HttpMethods
+                      - ROLE_ADMIN
+                '[/user]':
+                    GET:
+                      - ROLE_USER
+                      - ROLE_ADMIN
+                    POST:
+                      - ROLE_USER
+                    PUT:
+                      - ROLE_USER
+                    DELETE:
+                      - ROLE_ADMIN
         ```
 
         </details>
@@ -113,7 +129,8 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               all:
-                - /
+                GET:
+                  - /
         ```
 
         </details>
@@ -128,7 +145,26 @@ Please check [spring-security-instant-demo](https://github.com/ByungJun25/spring
           security:
             permission:
               anonymous:
-                - /anonymous
+                GET:
+                  - /anonymous
+        ```
+
+        </details>
+
+    5. denyAll - you can set the URLs to deny a request.
+
+        <details>
+        <summary>Example - Click to expand.</summary>
+
+        ```yaml
+        instant:
+          security:
+            permission:
+              deny-all:
+                GET:
+                  - /denyGet
+                '[*]':
+                  - /denyAll
         ```
 
         </details>
@@ -251,13 +287,26 @@ Here you can see all properties that you can set up for your own security policy
 |Name|type|Default value|Description|
 |---|---|---|---|
 |`instant.security.permission.ignore-paths.[httpMethod]`|String[]|`{}`|Allows adding RequestMatcher instances that should that Spring Security should ignore.|
-|`instant.security.permission.permission-urls.[authorityName]`|String[]|`{}`|The URLs per roles|
-|`instant.security.permission.anonymous`|String[]|`{}`|The URLs for anonymous.|
-|`instant.security.permission.all`|String[]|`{}`|The URLs for permitAll.|
+|`instant.security.permission.permission-urls.[path].[httpMethod]`|String[]|`{}`|The authorities per URLs.|
+|`instant.security.permission.anonymous.[httpMethod]`|String[]|`{}`|The URLs for anonymous.|
+|`instant.security.permission.all.[httpMethod]`|String[]|`{}`|The URLs for permitAll.|
 
 </details>
 
-#### 5. Session management
+#### 5. allowed IP per URL
+
+<details>
+<summary>Click to expand!</summary>
+
+|Name|type|Default value|Description|
+|---|---|---|---|
+|`instant.security.secured-ip.enabled`|boolean|`false`|Enable Security Configuration per IP-Address.|
+|`instant.security.secured-ip.base-path-pattern`|String|`/secured/**`|A Base path pattern for http security configuration.|
+|`instant.security.secured-ip.permissions.[path].[httpMethod]`|String|`{}`|The IP-Address for URL.|
+
+</details>
+
+#### 6. Session management
 
 <details>
 <summary>Click to expand!</summary>
@@ -277,7 +326,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 6. CORS
+#### 7. CORS
 
 <details>
 <summary>Click to expand!</summary>
@@ -291,7 +340,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 7. CSRF
+#### 8. CSRF
 
 <details>
 <summary>Click to expand!</summary>
@@ -310,7 +359,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 8. AJAX
+#### 9. AJAX
 
 <details>
 <summary>Click to expand!</summary>
@@ -324,7 +373,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 9. AuthenticationEntryPoint
+#### 10. AuthenticationEntryPoint
 
 <details>
 <summary>Click to expand!</summary>
@@ -335,7 +384,7 @@ Here you can see all properties that you can set up for your own security policy
 
 </details>
 
-#### 10. AccessDeniedHandler
+#### 11. AccessDeniedHandler
 
 <details>
 <summary>Click to expand!</summary>
@@ -345,3 +394,19 @@ Here you can see all properties that you can set up for your own security policy
 |`instant.security.access-denied-handler.redirect-url`|String|`/error/accessDenied`|The URL to be redirected when unauthorized users access the protected resource.|
 
 </details>
+
+#### 12. Channel
+
+<details>
+<summary>Click to expand!</summary>
+
+|Name|type|Default value|Description|
+|---|---|---|---|
+|`instant.security.channel.enable`|boolean|`false`|if true, it will configure channel security.|
+|`instant.security.channel.all-secure`|boolean|`false`|if true, any requests will require secure channel.|
+|`instant.security.channel.[httpMethod]`|String[]|`{}`|The URLs per httpMethod|
+
+</details>
+
+## Log messages for debug
+You can see the log messages for debug by using `logging.level` property of Spring framework. For example: [application.yml](https://github.com/ByungJun25/spring-instant/blob/main/spring-security-instant/src/test/resources/application.yml)

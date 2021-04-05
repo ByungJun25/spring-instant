@@ -7,7 +7,7 @@ assignees: ByungJun25
 
 ---
 **Project**
-Which project is realted?
+Which project is related?
 
 **Describe the bug**
 A clear and concise description of what the bug is.

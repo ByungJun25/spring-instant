@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.github.ByungJun25</groupId>
     <artifactId>spring-instant</artifactId>
-    <version>0.5.8</version>
+    <version>0.1.4-SNAPSHOT</version>
   </parent>
   <groupId>com.github.ByungJun25</groupId>
   <artifactId>spring-security-instant</artifactId>
-  <version>0.5.8</version>
+  <version>0.1.4-SNAPSHOT</version>
   <name>spring-security-instant</name>
   <description>Spring Security Instant Library.</description>
   <url>https://github.com/ByungJun25/spring-instant/tree/main/spring-security-instant</url>
@@ -54,6 +54,11 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>${commons.validator.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

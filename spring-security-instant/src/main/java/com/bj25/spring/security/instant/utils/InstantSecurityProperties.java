@@ -90,6 +90,33 @@ public class InstantSecurityProperties {
      */
     private AjaxProperties ajax = new AjaxProperties();
 
+    /**
+     * Configuration for channel security
+     */
+    private ChannelProperties channel = new ChannelProperties();
+
+    /**
+     * Configuration for permission per IP
+     */
+    private SecuredIP securedIp = new SecuredIP();
+
+    @Getter
+    @Setter
+    public static class ChannelProperties {
+        /**
+         * if true, it will configure channel security.
+         */
+        private boolean enabled = false;
+        /**
+         * if true, any requests will require secure channel.
+         */
+        private boolean allSecure = false;
+        /**
+         * The URLs per httpMethod - [key: httpMethod, value: paths]
+         */
+        private Map<String, String[]> securePaths = new HashMap<>();
+    }
+
     @Setter
     @Getter
     public static class AuthenticationEntryPointProperties {
@@ -166,6 +193,25 @@ public class InstantSecurityProperties {
          * Allows configuring of Remember Me authentication.
          */
         private RememberMe rememberMe = new RememberMe();
+
+        /**
+         * Allows configuring of LoginUrlAuthenticationEntryPoint.
+         */
+        private AuthenticationEntryPointProperty entryPointProperty = new AuthenticationEntryPointProperty();
+
+        @Setter
+        @Getter
+        public static class AuthenticationEntryPointProperty {
+            /**
+             * Set to true to force login form access to be via https.
+             */
+            private boolean forceHttps = false;
+            /**
+             * Tells if we are to do a forward to the loginFormUrl using the
+             * RequestDispatcher, instead of a 302 redirect.
+             */
+            private boolean useForward = false;
+        }
 
         @Setter
         @Getter
@@ -260,24 +306,52 @@ public class InstantSecurityProperties {
     public static class PermissionProperties {
         /**
          * Allows adding RequestMatcher instances that should that Spring Security
-         * should ignore. - [key: httpMethod, value:path].
+         * should ignore. - [key: httpMethod, value:paths].
          */
         private Map<String, String[]> ignorePaths = new HashMap<>();
 
         /**
-         * The URLs per roles - [key: authority name, value: path].
+         * The URLs per roles - [key: path, value: [Key: httpMethod, value:
+         * authorities]].
          */
-        private Map<String, String[]> permissionUrls = new HashMap<>();
+        private Map<String, Map<String, String[]>> permissionUrls = new HashMap<>();
 
         /**
-         * The URLs for anonymous.
+         * The URLs for anonymous. - [key: httpMethod, value:paths].
          */
-        private String[] anonymous = new String[] {};
+        private Map<String, String[]> anonymous = new HashMap<>();
 
         /**
-         * The URLs for permitAll.
+         * The URLs for permitAll. - [key: httpMethod, value:paths].
          */
-        private String[] all = new String[] {};
+        private Map<String, String[]> all = new HashMap<>();
+
+        /**
+         * The URLs for denyAll. - [key: httpMethod, value:paths].
+         */
+        private Map<String, String[]> denyAll = new HashMap<>();
+
+    }
+
+    @Setter
+    @Getter
+    public static class SecuredIP {
+        /**
+         * Enable Security Configuration per IP-Address.
+         */
+        private boolean enabled = false;
+
+        /**
+         * <p>
+         * A Base path pattern for http security configuration.
+         */
+        private String basePathPattern = "/secured/**";
+
+        /**
+         * The URLs per IP-Address - [key: path, value: [Key: httpMethod, value:
+         * IP-Address]].
+         */
+        private Map<String, Map<String, String>> permissions = new HashMap<>();
     }
 
     @Setter
